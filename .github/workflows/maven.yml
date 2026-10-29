@@ -1,5 +1,8 @@
 name: Java CI
 
+env:
+  JAVA_TOOL_OPTIONS: "-Duser.language=en -Duser.country=US"
+
 on: [push]
 
 jobs:
@@ -16,6 +19,13 @@ jobs:
         java-version: 11
         java-package: jdk+fx
 
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-iped-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-iped-
     - name: Load libagdb from cache
       id: libagdb
       uses: actions/cache@v4
@@ -75,6 +85,13 @@ jobs:
         java-version: 14
         jdkFile: ./bellsoft-jdk14.0.2+13-linux-amd64-full.tar.gz
 
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-iped-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-iped-
     - name: Load libagdb from cache
       id: libagdb
       uses: actions/cache@v4
