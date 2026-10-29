@@ -151,7 +151,6 @@ public class OutlookDBXParser extends AbstractParser {
                 if (original != null) metadata.set("dbx:originalSubject", original);
                 if (mime != null && !mime.isEmpty()) metadata.set("dbx:mimeSubject", mime);
                 if (safeMatch(original, mime)) {
-                    metadata.set("resourceName", mime);
                     metadata.set(TikaCoreProperties.TITLE, mime);
                 }
                 extractor.parseEmbedded(buffered, handler, metadata, outputHtml);
