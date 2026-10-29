@@ -73,6 +73,8 @@ jobs:
         path: iped-snapshot.tar.gz
 
   build-java14:
+    needs: build-java11
+    if: ${{ always() }}
     
     runs-on: ubuntu-22.04
 
