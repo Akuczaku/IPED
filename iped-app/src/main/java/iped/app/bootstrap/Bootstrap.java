@@ -145,6 +145,15 @@ public class Bootstrap {
                 classpath += separator + pluginConfig.getPluginFolder().getAbsolutePath() + "/*";
             }
 
+            // IPED_V06_DBX_BOOTSTRAP_CLASSPATH_FIX
+            // Bootstrap starts a second JVM: libraries from the initial -cp are not inherited.
+            File dbxJar = new File(iped.getRootPath(), "lib/java-dbx-1.1-p7.jar");
+            if (dbxJar.isFile()) {
+                classpath += separator + dbxJar.getAbsolutePath();
+                System.out.println("[IPED DBX] Bootstrap parser JAR: " + dbxJar.getAbsolutePath());
+            } else {
+                System.err.println("[IPED DBX] Parser JAR missing: " + dbxJar.getAbsolutePath());
+            }
             classpath = fillClassPathWithLibreOfficeJars(iped, classpath, iped.getCmdLineArgs().isNogui());
 
             String javaBin = "java";
