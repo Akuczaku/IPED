@@ -459,6 +459,25 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>copy-java-dbx-lib</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>net.sf</groupId>
+                                    <artifactId>java-dbx</artifactId>
+                                    <version>${java.dbx.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${lib.dir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-telegram-decoder</id>
                         <phase>package</phase>
                         <goals>

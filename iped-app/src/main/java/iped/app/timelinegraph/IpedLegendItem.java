@@ -12,9 +12,31 @@ import org.jfree.chart.title.LegendTitle;
 
 public class IpedLegendItem extends LegendItem {
     IpedCombinedDomainXYPlot plot;
+    private static String polishDisplayLegendItem(String key) {
+        if (key == null) return null;
+        switch (key) {
+            case "created": return "Utworzono";
+            case "modified": return "Zmodyfikowano";
+            case "accessed": return "Ostatni dost\u0119p";
+            case "communication:date": return "Data komunikacji";
+            default: return key;
+        }
+    }
+
+    private static String plDisplayLabel(String key) {
+        if (key == null) return null;
+        switch (key) {
+            case "created": return iped.app.ui.Messages.getString("TimeLineGraph.createdLabel");
+            case "modified": return iped.app.ui.Messages.getString("TimeLineGraph.modifiedLabel");
+            case "accessed": return iped.app.ui.Messages.getString("TimeLineGraph.accessedLabel");
+            case "communication:date": return iped.app.ui.Messages.getString("TimeLineGraph.communicationLabel");
+            default: return key;
+        }
+    }
+
 
     public IpedLegendItem(String seriesKey, Paint paint, IpedCombinedDomainXYPlot plot) {
-        super(seriesKey, paint);
+        super(polishDisplayLegendItem(seriesKey), paint);
         this.plot = plot;
     }
 

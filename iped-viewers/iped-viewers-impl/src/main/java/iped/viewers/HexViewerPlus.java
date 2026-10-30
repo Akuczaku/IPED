@@ -2269,7 +2269,7 @@ public class HexViewerPlus extends AbstractViewer implements KeyListener, MouseL
         jrbInicio.setSelected(true);
 
         JButton buttonOK = new JButton("OK");
-        JButton buttonCancel = new JButton("Cancel");
+        JButton buttonCancel = new JButton("Anuluj");
 
         lblTexto.setBounds(15, 30, 100, 30);
         jtfTexto.setBounds(100, 30, 250, 30);

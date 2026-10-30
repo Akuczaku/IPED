@@ -157,7 +157,7 @@ public class ReportInfoDialog extends JDialog implements ActionListener {
 
                 } catch (IOException e1) {
                     e1.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error loading case info file: " + e1.toString()); //$NON-NLS-1$
+                    JOptionPane.showMessageDialog(null, "B\u0142\u0105d wczytywania pliku informacji o sprawie: " + e1.toString()); //$NON-NLS-1$
                 }
             }
 

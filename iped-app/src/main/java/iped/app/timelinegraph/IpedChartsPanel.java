@@ -140,9 +140,15 @@ public class IpedChartsPanel extends JPanel implements ResultSetViewer, TableMod
     LegendItemPopupMenu legendItemPopupMenu = null;
 
     /* chart fields */
-    IpedDateAxis domainAxis = new IpedDateAxis("Date (" + timePeriodString + ")", this);
+    IpedDateAxis domainAxis = new IpedDateAxis(iped.app.ui.Messages.getString("TimeLineGraph.dateAxis") + " (" + ("Day".equals(timePeriodString) ? iped.app.ui.Messages.getString("TimeLineGraph.day") : timePeriodString) + ")", this);
     IpedCombinedDomainXYPlot combinedPlot = new IpedCombinedDomainXYPlot(this);
     IpedChart chart = new IpedChart(combinedPlot);
+    // PL v0.7.8: draw axis caption as a bottom chart subtitle, not beneath the legend.
+    org.jfree.chart.title.TextTitle czakuTimelineAxisCaption = new org.jfree.chart.title.TextTitle("");
+    {
+        czakuTimelineAxisCaption.setPosition(org.jfree.chart.ui.RectangleEdge.BOTTOM);
+        chart.addSubtitle(czakuTimelineAxisCaption);
+    }
     IpedChartPanel chartPanel = null;
     JList legendList = new JList();
     JScrollPane listScroller = new JScrollPane(legendList);
@@ -197,6 +203,28 @@ public class IpedChartsPanel extends JPanel implements ResultSetViewer, TableMod
         this.setLayout(new GridLayout());
     }
 
+    private static String localizedLegendLabel(String key) {
+        if (key == null || !java.util.Locale.getDefault().getLanguage().equals("pl")) {
+            return key;
+        }
+        switch (key) {
+            case "created": return iped.app.ui.Messages.getString("TimeLineGraph.createdLabel");
+            case "modified": return iped.app.ui.Messages.getString("TimeLineGraph.modifiedLabel");
+            case "accessed": return iped.app.ui.Messages.getString("TimeLineGraph.accessedLabel");
+            case "communication:date": return iped.app.ui.Messages.getString("TimeLineGraph.communicationLabel");
+            default: return key;
+        }
+    }
+    private static String polishDisplayEventName(String key) {
+        if (key == null) return null;
+        switch (key) {
+            case "created": return "Utworzono";
+            case "modified": return "Zmodyfikowano";
+            case "accessed": return "Ostatni dost\u0119p";
+            case "communication:date": return "Data komunikacji";
+            default: return key;
+        }
+    }
     class LegendCellRenderer extends JLabel implements ListCellRenderer<LegendItemBlockContainer> {
 
         public LegendCellRenderer() {
@@ -209,7 +237,7 @@ public class IpedChartsPanel extends JPanel implements ResultSetViewer, TableMod
             JLabel result = this;
 
             result.setInheritsPopupMenu(true);
-            result.setText((String) value.getSeriesKey());
+            result.setText(polishDisplayEventName((String) value.getSeriesKey()));
             Color background;
             Color foreground;
             if (isSelected || cellHasFocus) {
@@ -613,7 +641,7 @@ public class IpedChartsPanel extends JPanel implements ResultSetViewer, TableMod
 
     @Override
     public String getTitle() {
-        return "Timeline";
+        return iped.app.ui.Messages.getString("TimeLineGraph.tabTitle");
     }
 
     @Override
@@ -783,7 +811,7 @@ public class IpedChartsPanel extends JPanel implements ResultSetViewer, TableMod
             highlightsRenderer.setDrawSeriesLineAsPath(false);
             highlightsRenderer.setSeriesShape(0, new Ellipse2D.Float(1, 1, 10, 10));
 
-            IpedHourAxis hours = new IpedHourAxis("Hours");
+            IpedHourAxis hours = new IpedHourAxis(iped.app.ui.Messages.getString("TimeLineGraph.hours"));
             hours.setAutoRange(false);
             hours.setRange(new Range(0, 24));
             firstPlot.setRangeAxis(1, hours);
@@ -796,8 +824,10 @@ public class IpedChartsPanel extends JPanel implements ResultSetViewer, TableMod
     }
 
     private JFreeChart createChart(HashMap<String, AbstractIntervalXYDataset> datasets, boolean resetDomainRange) {
-        domainAxis.setLabel("Date (" + timePeriodString + ") [" + timeZone.getDisplayName() + " " + DateUtil.getTimezoneOffsetInformation(timeZone) + "]");
-
+        // CZAKU_PL_V079_FIX4_MONTH_LOCALE
+        domainAxis.setLocale(new java.util.Locale("pl", "PL"));
+        domainAxis.setLabel("");
+        czakuTimelineAxisCaption.setText(iped.app.ui.Messages.getString("TimeLineGraph.dateAxis") + " (" + ("Day".equals(timePeriodString) ? iped.app.ui.Messages.getString("TimeLineGraph.day") : timePeriodString) + ") [" + DateUtil.getTimezoneOffsetInformation(timeZone) + "]");
         combinedPlot.setSkipFireEventChange(true);
 
         Object[] plots = combinedPlot.getSubplots().toArray();
@@ -825,7 +855,7 @@ public class IpedChartsPanel extends JPanel implements ResultSetViewer, TableMod
         XYPlot firstPlot = null;
         for (Iterator iterator = datasets.keySet().iterator(); iterator.hasNext();) {
             String marcador = (String) iterator.next();
-            IpedNumberAxis rangeAxis = new IpedNumberAxis(marcador);
+            IpedNumberAxis rangeAxis = new IpedNumberAxis("Items".equals(marcador) ? iped.app.ui.Messages.getString("TimeLineGraph.itemsAxis") : marcador);
             rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
             rangeAxis.setUpperMargin(0.10); // leave some space for item labels
 
@@ -1132,7 +1162,7 @@ public class IpedChartsPanel extends JPanel implements ResultSetViewer, TableMod
     }
 
     public String toString() {
-        return "Timeline panel";
+        return iped.app.ui.Messages.getString("TimeLineGraph.panelTitle");
     }
 
     @Override

@@ -2,6 +2,8 @@ package iped.app.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -66,6 +68,9 @@ public class ReportDialog implements ActionListener, TableModelListener {
     JButton propertiesLabel = new JButton(Messages.getString("ReportDialog.PropertiesLabel"));
     JButton keywordsButton = new JButton("..."); //$NON-NLS-1$
     JButton generate = new JButton(Messages.getString("ReportDialog.Create")); //$NON-NLS-1$
+    // CZAKU_PL_V0710_FIX3_REPORT_BUTTONS: controls for the current report path only.
+    JButton previewReportButton = new JButton("Podgl\u0105d raportu");
+    JButton openReportFolderButton = new JButton("Otw\u00f3rz folder");
     JCheckBox noAttachs = new JCheckBox(Messages.getString("ReportDialog.NoAttachments")); //$NON-NLS-1$
     JCheckBox noLinkedItems = new JCheckBox(Messages.getString("ReportDialog.noLinkedItems")); //$NON-NLS-1$
     JCheckBox append = new JCheckBox(Messages.getString("ReportDialog.AddToReport")); //$NON-NLS-1$
@@ -76,7 +81,7 @@ public class ReportDialog implements ActionListener, TableModelListener {
     public ReportDialog() {
 
         dialog.setTitle(Messages.getString("ReportDialog.Title")); //$NON-NLS-1$
-        dialog.setBounds(0, 0, 500, 500);
+        dialog.setBounds(0, 0, 650, 530);
         dialog.setLocationRelativeTo(null);
 
         JPanel footer1 = new JPanel(new BorderLayout());
@@ -107,7 +112,11 @@ public class ReportDialog implements ActionListener, TableModelListener {
 
         JPanel okPanel = new JPanel(new BorderLayout());
         okPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        okPanel.add(generate, BorderLayout.EAST);
+        JPanel reportButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
+        reportButtons.add(previewReportButton);
+        reportButtons.add(openReportFolderButton);
+        reportButtons.add(generate);
+        okPanel.add(reportButtons, BorderLayout.EAST);
 
         append.setToolTipText(Messages.getString("ReportDialog.AppendWarning"));
 
@@ -136,6 +145,8 @@ public class ReportDialog implements ActionListener, TableModelListener {
         infoButton.addActionListener(this);
         keywordsButton.addActionListener(this);
         generate.addActionListener(this);
+        previewReportButton.addActionListener(this);
+        openReportFolderButton.addActionListener(this);
 
         dialog.getContentPane().add(panel);
     }
@@ -256,6 +267,15 @@ public class ReportDialog implements ActionListener, TableModelListener {
                 keywords.setText(fileChooser.getSelectedFile().getAbsolutePath());
         }
 
+        if (e.getSource() == previewReportButton) {
+            openGeneratedReport();
+            return;
+        }
+        if (e.getSource() == openReportFolderButton) {
+            openGeneratedReportFolder();
+            return;
+        }
+
         if (e.getSource() == generate) {
             if (isInputOK())
                 generateReport();
@@ -267,6 +287,59 @@ public class ReportDialog implements ActionListener, TableModelListener {
             }
         }
 
+    }
+
+    private File getSelectedReportFolder() throws IOException {
+        String path = output.getText().trim();
+        if (path.isEmpty()) {
+            JOptionPane.showMessageDialog(dialog, "Najpierw wska\u017c katalog wyj\u015bciowy raportu.",
+                    "Raport IPED", JOptionPane.INFORMATION_MESSAGE);
+            return null;
+        }
+        return new File(path).getCanonicalFile();
+    }
+
+    private void openGeneratedReport() {
+        try {
+            File folder = getSelectedReportFolder();
+            if (folder == null) return;
+            File report = new File(folder, "raport.htm");
+            if (!report.isFile()) {
+                JOptionPane.showMessageDialog(dialog,
+                        "Nie znaleziono raportu: " + report.getAbsolutePath(),
+                        "Podgl\u0105d raportu", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                throw new IOException("System nie obs\u0142uguje otwierania adresu w przegl\u0105darce.");
+            }
+            Desktop.getDesktop().browse(report.toURI());
+        } catch (Exception ex) {
+            logger.error("Could not open report preview", ex);
+            JOptionPane.showMessageDialog(dialog, "Nie mo\u017cna otworzy\u0107 podgl\u0105du: " + ex.getMessage(),
+                    "Raport IPED", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void openGeneratedReportFolder() {
+        try {
+            File folder = getSelectedReportFolder();
+            if (folder == null) return;
+            if (!folder.isDirectory()) {
+                JOptionPane.showMessageDialog(dialog,
+                        "Katalog raportu jeszcze nie istnieje: " + folder.getAbsolutePath(),
+                        "Raport IPED", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+                throw new IOException("System nie obs\u0142uguje otwierania folder\u00f3w.");
+            }
+            Desktop.getDesktop().open(folder);
+        } catch (Exception ex) {
+            logger.error("Could not open report folder", ex);
+            JOptionPane.showMessageDialog(dialog, "Nie mo\u017cna otworzy\u0107 folderu: " + ex.getMessage(),
+                    "Raport IPED", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private boolean isInputOK() {

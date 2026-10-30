@@ -321,7 +321,7 @@ public class IpedTimelineDataset extends AbstractIntervalXYDataset implements Cl
             try {
                 ipedChartsPanel.getIpedTimelineDatasetManager().waitMemory();
             } catch (OutOfMemoryError e) {
-                JOptionPane.showMessageDialog(ipedChartsPanel, "Insufficient Memory to plot chart!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(ipedChartsPanel, "Za ma\u0142o pami\u0119ci, aby wy\u015bwietli\u0107 wykres!", "B\u0142\u0105d", JOptionPane.ERROR_MESSAGE);
                 memoryCacheReloadSem.release();
                 return;
             }

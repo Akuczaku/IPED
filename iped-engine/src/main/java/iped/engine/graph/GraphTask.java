@@ -154,7 +154,7 @@ public class GraphTask extends AbstractTask {
     }
 
     private void finishGraphGeneration() throws IOException {
-        UIPropertyListenerProvider.getInstance().firePropertyChange("mensagem", "", "Generating graph database...");
+        UIPropertyListenerProvider.getInstance().firePropertyChange("mensagem", "", "Tworzenie bazy danych grafu...");
         logger.info("Generating graph database...");
         File graphDbHome = new File(output, DB_HOME_DIR);
         File graphCSVs = new File(output, CSVS_PATH);

@@ -47,7 +47,7 @@ public class GraphVizIpedResolver implements GraphVizResolver {
                 throw new IOException();
 
         } catch (IOException | InterruptedException e) {
-            JOptionPane.showMessageDialog(App.get(), Messages.getString("GraphAnalysis.GraphvizError", cmd), "Error",
+            JOptionPane.showMessageDialog(App.get(), Messages.getString("GraphAnalysis.GraphvizError", cmd), "B\u0142\u0105d",
                     JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException("Error testing graphviz.", e);
         }

@@ -92,7 +92,7 @@ class LoadGraphDatabaseWorker extends SwingWorker<Void, Void> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JOptionPane.showMessageDialog(App.get(), Messages.getString("GraphAnalysis.MultiGraphError"), "Error",
+            JOptionPane.showMessageDialog(App.get(), Messages.getString("GraphAnalysis.MultiGraphError"), "B\u0142\u0105d",
                     JOptionPane.ERROR_MESSAGE);
         }
     }

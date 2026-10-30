@@ -82,7 +82,7 @@ public class JMapOptionsPane extends JOptionPane {
             dialog = new JDialog((Frame) null, title, true);
 
         JButton btOk = new JButton("Ok");
-        JButton btCancel = new JButton("Cancel");
+        JButton btCancel = new JButton("Anuluj");
         btOk.setEnabled(false);
 
         JPanel pane = new JPanel();

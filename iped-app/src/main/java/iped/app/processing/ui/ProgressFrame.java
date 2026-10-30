@@ -133,7 +133,7 @@ public class ProgressFrame extends JFrame implements PropertyChangeListener, Act
     }
 
     public ProgressFrame(UIPropertyListenerProvider task) {
-        super(Version.APP_NAME);
+        super("IPED - Polska Edycja by Czaku 4.3.1");
         setIconImages(IconUtil.getIconImages("process", "/iped/app/icon"));
 
         this.setBounds(0, 0, 800, 400);
@@ -351,6 +351,28 @@ public class ProgressFrame extends JFrame implements PropertyChangeListener, Act
         return msg.toString();
     }
 
+    private String localizedTaskName(String technicalName) {
+        if (technicalName == null) {
+            return "";
+        }
+        switch (technicalName) {
+            case "SkipCommittedTask": return "Pomijanie zatwierdzonych element\u00f3w";
+            case "IgnoreHardLinkTask": return "Pomijanie dowi\u0105za\u0144 twardych";
+            case "TempFileTask": return "Pliki tymczasowe";
+            case "HashTask": return "Obliczanie skr\u00f3t\u00f3w";
+            case "SignatureTask": return "Rozpoznawanie sygnatur";
+            case "SetTypeTask": return "Ustalanie typ\u00f3w plik\u00f3w";
+            case "SetCategoryTask": return "Przypisywanie kategorii";
+            case "RefineCategoryTask": return "Doprecyzowanie kategorii";
+            case "HashDBLookupTask": return "Wyszukiwanie w bazie skr\u00f3t\u00f3w";
+            case "DuplicateTask": return "Wykrywanie duplikat\u00f3w";
+            case "AudioTranscriptTask": return "Transkrypcja d\u017awi\u0119ku";
+            case "VideoThumbTask": return "Miniatury wideo";
+            case "ParsingTask": return "Analiza zawarto\u015bci";
+            case "QRCodeTask": return "Rozpoznawanie kod\u00f3w QR";
+            default: return technicalName;
+        }
+    }
     private String getTaskTimes() {
         if (workers == null) {
             return "";
@@ -378,11 +400,11 @@ public class ProgressFrame extends JFrame implements PropertyChangeListener, Act
                 long sec = time / (1000000 * workers.length);
                 int pct = (int) ((100 * time + totalTime / 2) / totalTime);  // Round percentage
 
-                startRow(msg, task.getName(), pct);
+                startRow(msg, localizedTaskName(task.getName()), pct);
                 addCell(msg, nf.format(sec) + "s", Align.RIGHT);
                 finishRow(msg, pct + "%", Align.RIGHT);
             } else {
-                startRow(msg, task.getName(), false);
+                startRow(msg, localizedTaskName(task.getName()), false);
                 addCell(msg, "-", Align.CENTER);
                 finishRow(msg, "-", Align.CENTER);
             }

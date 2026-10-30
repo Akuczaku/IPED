@@ -307,7 +307,7 @@ public class ExportFileTree extends CancelableWorker {
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
-                    JOptionPane.showMessageDialog(App.get(), Messages.getString("ExportFileTree.ExportError") + e.getMessage(), "Error", //$NON-NLS-2$
+                    JOptionPane.showMessageDialog(App.get(), Messages.getString("ExportFileTree.ExportError") + e.getMessage(), "B\u0142\u0105d", //$NON-NLS-2$
                             JOptionPane.ERROR_MESSAGE);
                 }
             });

@@ -474,12 +474,12 @@ public class App extends JFrame implements WindowListener, IMultiSearchResultPro
     public void createGUI() {
 
         if (!Util.isJavaFXPresent()) {
-            JOptionPane.showMessageDialog(this, Messages.get("NoJavaFX.Error"), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, Messages.get("NoJavaFX.Error"), "B\u0142\u0105d", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         String tab = "     "; //$NON-NLS-1$
-        this.setTitle(Version.APP_NAME + tab + "[" + Messages.getString("App.Case") + ": " + casesPathFile + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        this.setTitle(Version.APP_NAME.replace(Version.APP_NAME_PREFIX, Messages.getString("App.NamePrefix")) + tab + "[" + Messages.getString("App.Case") + ": " + casesPathFile + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         this.setSize(new Dimension(800, 600));
         this.setExtendedState(Frame.MAXIMIZED_BOTH);
         this.addWindowListener(this);

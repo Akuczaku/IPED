@@ -71,7 +71,7 @@ public class IpedDateAxis extends DateAxis implements MouseResponsiveChartEntity
         this.ipedChartsPanel = ipedChartsPanel;
 
         dateFormaters.put(DateTickUnitType.YEAR, new SimpleDateFormat("yyyy"));
-        dateFormaters.put(DateTickUnitType.MONTH, new SimpleDateFormat("MMM-yyyy"));
+        dateFormaters.put(DateTickUnitType.MONTH, new java.text.SimpleDateFormat("MMM-yyyy", new java.util.Locale("pl", "PL")));
         dateFormaters.put(DateTickUnitType.DAY, new SimpleDateFormat("d-MMM'\n'yyyy"));
         dateFormaters.put(DateTickUnitType.HOUR, new SimpleDateFormat("HH:'00'\nd-MMM-yyyy"));
         dateFormaters.put(DateTickUnitType.MINUTE, new SimpleDateFormat("HH:mm\nd-MMM-yyyy"));

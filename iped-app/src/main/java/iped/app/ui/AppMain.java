@@ -216,7 +216,7 @@ public class AppMain {
         try (PrintStream ps = new PrintStream(baos, true)) {
             e.printStackTrace(ps);
         }
-        JOptionPane.showMessageDialog(null, "Error: " + new String(baos.toByteArray()), // $NON-NLS-1$
+        JOptionPane.showMessageDialog(null, "B\u0142\u0105d: " + new String(baos.toByteArray()), // $NON-NLS-1$
                 Messages.getString("AppLazyInitializer.errorTitle"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
     }
 

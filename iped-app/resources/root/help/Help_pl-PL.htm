@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Pomoc IPED</title>
+    </head>
+    <body class="ipedtheme">
+        <p style="font-size:24px"><b>Skrócona pomoc IPED</b></p>
+        <b>Składnia wyszukiwania:</b><br />
+        <br />
+        Do uruchomienia interfejsu analizy wymagany jest 64-bitowy system operacyjny. Jeśli sprawa lub raport znajdują się na nośniku optycznym, praca może być wolna. W takim przypadku skopiuj całą sprawę na lokalny dysk i uruchom aplikację analityczną z tego dysku.<br>
+        <br>
+        Wyszukiwanie słów kluczowych obejmuje nazwy plików oraz zawartość dokumentów tekstowych, takich jak Word, Excel, PDF, wiadomości e-mail, strony internetowe i czaty. Jeśli włączono OCR (<i>optyczne rozpoznawanie znaków</i>), można również wyszukiwać tekst na obrazach. Niektóre wyniki mogą jednak nie zostać znalezione na obrazach o niskiej jakości lub rozdzielczości albo zawierających małe lub nietypowe czcionki.<br>
+        <br>
+        Wyszukiwanie słów kluczowych nie rozróżnia wielkości liter ani znaków diakrytycznych. <b>Zaleca się jednak wpisywanie znaków diakrytycznych, aby wyszukiwane słowa były prawidłowo podświetlane w zakładce „Podgląd”</b>. Nie zaleca się wyszukiwania bardzo częstych lub krótkich słów, np. <b>OF</b>. Przykłady zapytań:
+        <br>
+        <ul>
+            <li>1. <b>suspect</b><br/>Wyszukuje pliki zawierające dokładne słowo <b>suspect</b>. Pliki zawierające <b>suspects</b> nie zostaną znalezione.
+                <br><br /></li>
+            <li>2. <b>suspect?</b><br/>Wyszukuje słowa zaczynające się od <b>suspect</b> z dokładnie jednym dodatkowym znakiem, np. <b>suspects</b>.
+                <br><br /></li>
+            <li>3. <b>suspect*</b><br/>Wyszukuje słowa zaczynające się od <b>suspect</b>, także bez przyrostka, np. <b>suspect</b>, <b>suspects</b> i <b>suspecting</b>.
+                <br><br /></li>
+            <li>4. <b>Sicrano~</b><br>Wyszukuje słowa równe lub podobne do <b>sicrano</b>, np. <b>siclano</b>, <b>cicrano</b> i <b>ciclano</b>. Wyszukiwanie jest wolniejsze, ale może pomóc przy tekście rozpoznanym przez OCR.
+                <br /><br /></li>
+            <li>5. <b>"Thomas Edson"</b><br>Wyszukuje dokładną frazę <b>Thomas Edson</b>. W cudzysłowie nie można używać operatorów * ? ~.<br>
+                <br /></li>
+            <li>6. <b>Thomas Edson</b><br>Wyszukuje pliki zawierające <b>Thomas</b> lub <b>Edson</b>. Odpowiada zapytaniu <b>Thomas OR Edson</b>.
+                <br/><br /></li>
+            <li>7. <b>Thomas AND Edson</b><br>Wyszukuje pliki zawierające jednocześnie <b>Thomas</b> i <b>Edson</b>.
+                <br><br /></li>
+            <li>8. <b>bribery -payment</b><br>Wyszukuje pliki zawierające <b>bribery</b>, ale niezawierające <b>payment</b>. Odpowiada zapytaniu <b>bribery AND NOT payment</b>.
+                <br /><br /></li>
+            <li>9. <b>(Thomas Edson) && payment</b><br>Wyszukuje pliki zawierające <b>payment</b> oraz co najmniej jedno ze słów <b>Thomas</b> lub <b>Edson</b>.
+                <br /><br /></li>
+            <li>10. <b>"Thomas Edson"~5</b><br>Wyszukuje pliki, w których <b>Thomas</b> i <b>Edson</b> występują w odległości nie większej niż 5 słów.
+                <br><br /></li>
+            <li>11. <b>(Thomas Edson John)@2</b><br>Wyszukuje pliki zawierające co najmniej dwa słowa z podanego zestawu.
+                <br><br /></li>
+            <li>12. <b>name:receipt</b><br>Wyszukuje pliki ze słowem <b>receipt</b> w polu nazwy.
+                <br>Można używać właściwości dostępnych w menedżerze kolumn, z wyjątkiem pól „bookmark” i „score”.
+                <br><br /></li>
+            <li>13. <b>size:[5000 TO *]</b><br>Wyszukuje pliki o rozmiarze co najmniej 5000 bajtów. Nawiasy {} zamiast [] wykluczają wartość graniczną.
+                <br><br /></li>
+            <li>14. <b>modified:[2015-01-31 TO 2015-03-31T12\:59\:59Z]</b><br>Wyszukuje pliki zmodyfikowane od 31.01.2015 00:00 do 31.03.2015 12:59:59 (zgodnie ze strefą czasową wyrażoną w zapytaniu).
+                <br><br /></li>
+            <li>15. <b>/<0-17>y(r|o)/</b><br>Wyszukuje wyrażenie regularne ujęte między dwa ukośniki /. Działa na zaindeksowanych znakach (domyślnie alfanumerycznych).
+                <br><br /></li>
+        </ul>
+        Więcej informacji o składni wyszukiwania: https://lucene.apache.org/core/9_2_0/queryparser/org/apache/lucene/queryparser/flexible/standard/StandardQueryParser.html.
+    </body>
+</html>
