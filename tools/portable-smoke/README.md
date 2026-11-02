@@ -16,3 +16,6 @@ Get-Content -LiteralPath '.\wynik-jep-YYYYMMDD-HHMMSS.json' -Raw -Encoding UTF8 
 ```
 
 PASS covers runtime origin, Python 3.9, arithmetic, UTF-8 round trip, SQLite and a Python-to-Java call. It does not validate all IPED Python tasks, AI models or GPU features.
+
+## Windows portable launchers
+The three scripts in windows/ are copied to the package root. They use the bundled Java/Python/JEP for processing and opening cases. See [deployment instructions and scoped test results](../../docs/testing/FIX19.1-portable-jep-pl.md). These sources reproduce the launchers, not the complete Windows distribution.
