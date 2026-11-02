@@ -45,3 +45,11 @@ To paczka z istniejącej dystrybucji Windows, przebudowanych modułów i zasobó
 - Poprzednie logi informowały o braku opcjonalnej wtyczki JPEG2000 dla PDF. Nie deklarujemy dodania tej wtyczki.
 
 Parsera PDF, danych prywatnych i dotychczasowych spraw nie zmieniono. Surowe nazwy tabel i kolumn oraz techniczne identyfikatory pól pozostają oryginalne.
+
+## Korekta po pierwszym CI tej gałęzi
+
+Przebieg 41491250971 wykazał jedno niepowodzenie w `TelegramParserTest.testTelegramParser`: oczekiwano `phone:`, otrzymano `Phone:`. Przyczyną było użycie etykiety nagłówka kontaktu wewnątrz opisu uczestnika.
+
+Rozdzielono zasoby: `TelegramContact.Phone` pozostaje nagłówkiem `Phone:` / `Telefon:`, a nowy `TelegramContact.PhoneInline` zachowuje dotychczasowe `phone:` po angielsku i `Telefon:` po polsku. Testów nie wyłączono ani nie zmieniono ich oczekiwań.
+
+Lokalnie uruchomiono oryginalny `TelegramParserTest` z dekoderem Android 1.0.14: `OK (2 tests)`. Osobne procesy Java potwierdziły tekst uczestnika w języku polskim i angielskim. Pełny przebieg CI Java 11/14 po tej korekcie wymaga ponownej publikacji commita i sprawdzenia. Wcześniej udostępniony ZIP FIX19.1 nie został na tym etapie przebudowany; testowany polski tekst nie ulega zmianie.

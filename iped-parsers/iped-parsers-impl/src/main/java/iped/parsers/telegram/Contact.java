@@ -183,7 +183,7 @@ public class Contact implements ContactInterface {
             if (sb.length() > 0) {
                 sb.append(' ');
             }
-            sb.append("(").append(Messages.getString("TelegramContact.Phone")).append(" ").append(number).append(')');
+            sb.append("(").append(Messages.getString("TelegramContact.PhoneInline")).append(" ").append(number).append(')');
         } else if (getId() > 0) {
             if (sb.length() > 0) {
                 sb.append(' ');
