@@ -19,3 +19,6 @@ PASS covers runtime origin, Python 3.9, arithmetic, UTF-8 round trip, SQLite and
 
 ## Windows portable launchers
 The three scripts in windows/ are copied to the package root. They use the bundled Java/Python/JEP for processing and opening cases. See [deployment instructions and scoped test results](../../docs/testing/FIX19.1-portable-jep-pl.md). These sources reproduce the launchers, not the complete Windows distribution.
+
+## Polish OCR
+See [Polish OCR audit, fixtures and package setup](../../docs/testing/FIX19.1-ocr-pl.md). Model download is pinned and checksum-verified; OCR stays disabled by default.
