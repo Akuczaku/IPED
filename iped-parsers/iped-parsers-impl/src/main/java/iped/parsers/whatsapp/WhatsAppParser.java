@@ -18,6 +18,8 @@
  */
 package iped.parsers.whatsapp;
 
+import iped.parsers.util.Messages;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -1042,7 +1044,7 @@ public class WhatsAppParser extends SQLite3DBParser {
         for (iped.parsers.whatsapp.Message m : messages) {
 
             Metadata meta = new Metadata();
-            meta.set(TikaCoreProperties.TITLE, chatName + "_message_" + msgCount++); //$NON-NLS-1$
+            meta.set(TikaCoreProperties.TITLE, chatName + "_" + Messages.getString("WhatsAppReport.MessageTitle") + "_" + msgCount++); //$NON-NLS-1$
             meta.set(StandardParser.INDEXER_CONTENT_TYPE, WHATSAPP_MESSAGE.toString());
             meta.set(ExtraProperties.PARENT_VIRTUAL_ID, Integer.toString(parentVirtualId));
             meta.set(ExtraProperties.PARENT_VIEW_POSITION, String.valueOf(m.getUniqueId()));

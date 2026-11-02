@@ -497,6 +497,14 @@ public class App extends JFrame implements WindowListener, IMultiSearchResultPro
         // (if available)
         LocaleConfig localeConfig = ConfigurationManager.get().findObject(LocaleConfig.class);
         dockingControl.setLanguage(localeConfig.getLocale());
+        if ("pl".equals(localeConfig.getLocale().getLanguage())) {
+            java.util.ResourceBundle dockingTexts = iped.localization.Messages.getExternalBundle(
+                    "iped-docking-messages", localeConfig.getLocale());
+            for (String key : dockingTexts.keySet()) {
+                dockingControl.getController().getTexts().put(
+                        bibliothek.gui.dock.util.Priority.CLIENT, key, dockingTexts.getString(key));
+            }
+        }
 
         // Set the locale used by JFileChooser's
         JFileChooser.setDefaultLocale(localeConfig.getLocale());
