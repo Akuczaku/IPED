@@ -52,4 +52,10 @@ Przebieg 41491250971 wykazał jedno niepowodzenie w `TelegramParserTest.testTele
 
 Rozdzielono zasoby: `TelegramContact.Phone` pozostaje nagłówkiem `Phone:` / `Telefon:`, a nowy `TelegramContact.PhoneInline` zachowuje dotychczasowe `phone:` po angielsku i `Telefon:` po polsku. Testów nie wyłączono ani nie zmieniono ich oczekiwań.
 
-Lokalnie uruchomiono oryginalny `TelegramParserTest` z dekoderem Android 1.0.14: `OK (2 tests)`. Osobne procesy Java potwierdziły tekst uczestnika w języku polskim i angielskim. Pełny przebieg CI Java 11/14 po tej korekcie wymaga ponownej publikacji commita i sprawdzenia. Wcześniej udostępniony ZIP FIX19.1 nie został na tym etapie przebudowany; testowany polski tekst nie ulega zmianie.
+Lokalnie uruchomiono oryginalny `TelegramParserTest` z dekoderem Android 1.0.14: `OK (2 tests)`. Osobne procesy Java potwierdziły tekst uczestnika w języku polskim i angielskim. Przebieg CI [41493151064](https://github.com/Akuczaku/IPED/actions/runs/41493151064) dla commita `18bf54fcb` zakończył się powodzeniem dla Java 11 i Java 14. Użytkownik potwierdził również wynik obu kontroli w PR #1.
+
+## Przegląd przed scaleniem
+
+W czytniku ICEpdf zastąpiono wymuszony język polski językiem wybranym przez `LocaleResolver`, używanym również przez lokalizację pozostałych przeglądarek IPED. Polska konfiguracja nadal wybiera nowy pakiet polski; konfiguracje innych języków korzystają z pakietów ICEpdf. Ta korekta wymaga nowego przebiegu CI i sprawdzenia GUI; wcześniejsze zielone kontrole dotyczą commita `18bf54fcb`. Dotychczasowych paczek portable nie przebudowano w ramach tego przeglądu.
+
+Weryfikacja lokalna korekty: kompilacja IcePDFViewer przez javac --release 11 przeciw bibliotekom portable zakończona powodzeniem. Test rzeczywistych pakietów zasobów: pl-PL → Szukaj, en-US → Search; domyślny język JVM nie został zmieniony. Wyłączono powrót do języka systemowego przy braku pakietu dla wybranego języka, zachowując dziedziczenie pakietu bazowego ICEpdf. Nie zastępuje to testu GUI.
