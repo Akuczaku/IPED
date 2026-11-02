@@ -1,5 +1,7 @@
 package iped.parsers.whatsapp;
 
+import iped.parsers.util.Messages;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -117,12 +119,12 @@ public class Chat {
         if (title == null) {
             title = "WhatsApp ";
             if (isChannelChat()) {
-                title += "Channel";
+                title += Messages.getString("WhatsAppReport.ChannelTitle");
                 if (getSubject() != null && !getSubject().isBlank()) {
                     title += " - " + getSubject().strip();
                 }
             } else if (isGroupChat()) {
-                title += "Group";
+                title += Messages.getString("WhatsAppReport.GroupTitle");
                 if (getSubject() != null && !getSubject().isBlank()) {
                     title += " - " + getSubject().strip();
                 }
@@ -130,7 +132,7 @@ public class Chat {
                 if (isBroadcast()) {
                     title += "Status";
                 } else {
-                    title += "Chat";
+                    title += Messages.getString("WhatsAppReport.ChatTitle");
                 }
                 if (remote != null && remote.getName() != null
                         && (getPrintId() == null || !remote.getName().strip().equals(getPrintId().strip()))) {

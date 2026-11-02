@@ -1,5 +1,7 @@
 package iped.parsers.whatsapp;
 
+import iped.parsers.util.Messages;
+
 public class WAContact {
 
     public static final String waSuffix = "@s.whatsapp.net";
@@ -112,7 +114,7 @@ public class WAContact {
     }
 
     public String getTitle() {
-        return "WhatsApp Contact: " + getName(); //$NON-NLS-1$
+        return Messages.getString("WhatsAppReport.ContactTitle") + ": " + getName(); //$NON-NLS-1$
     }
 
     public byte[] getAvatar() {

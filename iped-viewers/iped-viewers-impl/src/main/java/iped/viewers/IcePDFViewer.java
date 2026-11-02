@@ -83,7 +83,7 @@ public class IcePDFViewer extends AbstractViewer {
 
         new File(System.getProperties().getProperty("user.home"), ".icesoft/icepdf-viewer").mkdirs(); //$NON-NLS-1$ //$NON-NLS-2$
 
-        pdfController = new SwingController() {
+        pdfController = new SwingController(java.util.ResourceBundle.getBundle("org.icepdf.ri.resources.MessageBundle", java.util.Locale.forLanguageTag("pl"))) {
             // Override openDocument, to avoid opening dialog messages
             public void openDocument(String pathname) {
                 if (pathname != null && pathname.length() > 0) {

@@ -198,7 +198,7 @@ public class SkypeParser extends AbstractParser {
                         for (SkypeMessage sm : conv.getMessages()) {
                             Metadata meta = new Metadata();
                             meta.set(StandardParser.INDEXER_CONTENT_TYPE, MESSAGE_MIME_TYPE);
-                            meta.set(TikaCoreProperties.TITLE, conv.getTitle() + "_msg_" + msgNum++);
+                            meta.set(TikaCoreProperties.TITLE, conv.getTitle() + "_" + Messages.getString("SkypeReport.MessageTitle") + "_" + msgNum++);
                             meta.set(TikaCoreProperties.CREATED, sm.getData());
                             meta.set(ExtraProperties.DECODED_DATA, Boolean.TRUE.toString());
                             meta.set(ExtraProperties.PARENT_VIRTUAL_ID, conv.getId());

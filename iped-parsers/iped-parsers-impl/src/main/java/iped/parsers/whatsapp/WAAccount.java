@@ -1,5 +1,7 @@
 package iped.parsers.whatsapp;
 
+import iped.parsers.util.Messages;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -31,7 +33,7 @@ public class WAAccount extends WAContact {
     }
 
     public String getTitle() {
-        return "WhatsApp Account: " + getName();
+        return Messages.getString("WhatsAppReport.AccountTitle") + ": " + getName();
     }
 
     public static WAAccount getFromAndroidXml(InputStream is) throws SAXException, IOException {

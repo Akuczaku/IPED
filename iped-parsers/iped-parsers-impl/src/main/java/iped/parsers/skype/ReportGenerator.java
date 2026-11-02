@@ -83,10 +83,10 @@ public class ReportGenerator {
         out.println("<TR><TH>" + Messages.getString("SkypeReport.Attribute") + "</TH><TH>" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 + Messages.getString("SkypeReport.Value") + "</TH></TR>"); //$NON-NLS-1$ //$NON-NLS-2$
         out.println(NEW_ROW + "ID" + NEW_COL + FormatUtil.format(c.getId()) + CLOSE_ROW); //$NON-NLS-1$
-        out.println(NEW_ROW + "Nome do chat" + NEW_COL + FormatUtil.format(c.getDisplayName()) + CLOSE_ROW); //$NON-NLS-1$
-        out.println(NEW_ROW + "Criado em:" + NEW_COL + FormatUtil.format(c.getCreationDate()) + CLOSE_ROW); //$NON-NLS-1$
+        out.println(NEW_ROW + Messages.getString("SkypeReport.ChatName") + NEW_COL + FormatUtil.format(c.getDisplayName()) + CLOSE_ROW); //$NON-NLS-1$
+        out.println(NEW_ROW + Messages.getString("SkypeReport.CreatedOn") + NEW_COL + FormatUtil.format(c.getCreationDate()) + CLOSE_ROW); //$NON-NLS-1$
         out.println(
-                NEW_ROW + "Data da última atividade:" + NEW_COL + FormatUtil.format(c.getLastActivity()) + CLOSE_ROW); //$NON-NLS-1$
+                NEW_ROW + Messages.getString("SkypeReport.LastActivity") + NEW_COL + FormatUtil.format(c.getLastActivity()) + CLOSE_ROW); //$NON-NLS-1$
         out.println("</TABLE>"); //$NON-NLS-1$
 
         out.println("<P>" + Messages.getString("SkypeReport.Messages") + ":</P>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -192,7 +192,7 @@ public class ReportGenerator {
         startDocument(out);
 
         try {
-            out.println("<P>" + "Dados do usuário:" + FormatUtil.format(c.getSkypeName()) + "</P>"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+            out.println("<P>" + Messages.getString("SkypeReport.UserData") + FormatUtil.format(c.getSkypeName()) + "</P>"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
             byte b[] = c.getAvatar();
             if (b != null) {
                 out.println("<P>" + Messages.getString("SkypeReport.Avatar") //$NON-NLS-1$ //$NON-NLS-2$

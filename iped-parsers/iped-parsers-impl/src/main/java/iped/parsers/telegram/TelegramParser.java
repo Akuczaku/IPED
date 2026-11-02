@@ -18,6 +18,8 @@
  */
 package iped.parsers.telegram;
 
+import iped.parsers.util.Messages;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -237,11 +239,11 @@ public class TelegramParser extends SQLite3DBParser {
     private String getChatNamePrefix(Chat c) {
         String title = "Telegram_";
         if (c.isChannel()) {
-            title += "Channel";
+            title += Messages.getString("TelegramReport.ChannelTitle");
         } else if (c.isGroup()) {
-            title += "Group";
+            title += Messages.getString("TelegramReport.GroupTitle");
         } else {
-            title += "Chat";
+            title += Messages.getString("TelegramReport.ChatTitle");
         }
         title += "_" + c.getName();
         return title;
@@ -252,7 +254,7 @@ public class TelegramParser extends SQLite3DBParser {
         int msgCount = 0;
         for (Message m : messages) {
             Metadata meta = new Metadata();
-            meta.set(TikaCoreProperties.TITLE, chatName + "_message_" + msgCount++); //$NON-NLS-1$
+            meta.set(TikaCoreProperties.TITLE, chatName + "_" + Messages.getString("TelegramReport.MessageTitle") + "_" + msgCount++); //$NON-NLS-1$
             meta.set(StandardParser.INDEXER_CONTENT_TYPE, TELEGRAM_MESSAGE.toString());
             meta.set(ExtraProperties.PARENT_VIRTUAL_ID, Long.toString(parentId));
             meta.set(ExtraProperties.PARENT_VIEW_POSITION, String.valueOf(m.getId()));
