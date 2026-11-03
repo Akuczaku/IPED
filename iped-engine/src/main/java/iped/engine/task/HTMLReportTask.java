@@ -63,6 +63,7 @@ import org.slf4j.LoggerFactory;
 
 import iped.configuration.Configurable;
 import iped.data.IItem;
+import iped.localization.LocalizedProperties;
 import iped.engine.CmdLineArgs;
 import iped.engine.config.Configuration;
 import iped.engine.config.ConfigurationManager;
@@ -712,7 +713,8 @@ public class HTMLReportTask extends AbstractTask {
             if (selectedProperties.contains(BasicProps.TYPE))
                 fillItemProperty(it, item, Messages.getString("HTMLReportTask.ItemType"), reg.category);
             if (selectedProperties.contains(BasicProps.LENGTH))
-                fillItemProperty(it, item, Messages.getString("HTMLReportTask.ItemSize"), formatNumber(reg.length, longFormat) + " Bytes");
+                fillItemProperty(it, item, Messages.getString("HTMLReportTask.ItemSize"),
+                        formatNumber(reg.length, longFormat) + " " + Messages.getString("HTMLReportTask.Bytes"));
             if (selectedProperties.contains(BasicProps.CREATED))
                 fillItemProperty(it, item, Messages.getString("HTMLReportTask.ItemCreated"), formatDate(reg.created, dateFormat));
             if (selectedProperties.contains(BasicProps.MODIFIED))
@@ -730,7 +732,10 @@ public class HTMLReportTask extends AbstractTask {
             for (String property : selectedProperties) {
                 if (!basicReportProps.contains(property)) { // filter for additional properties selected by the user
                     String propertyValue = ipedCase.getItemProperty(reg.evidenceId, property);
-                    fillItemProperty(it, item, property, propertyValue);
+                    if (BasicProps.CATEGORY.equals(property)) {
+                        propertyValue = reg.category;
+                    }
+                    fillItemProperty(it, item, LocalizedProperties.getLocalizedField(property), propertyValue);
                 }
             }
             if (selectedProperties.contains(IndexItem.ID_IN_SOURCE)) {

@@ -13,3 +13,11 @@ Walidacja lokalna:
 - Instalator PS5.1: kontrola wersji SHA-256, kopie oryginałów, atomowa podmiana, próba na kopii i ponowne uruchomienie instalatora PASS.
 
 Status: poprawka źródłowa i lokalna nakładka przygotowane; test przez GUI użytkownika oraz nowe CI pozostają do wykonania. Nie zmieniono źródłowej sprawy, parsera PDF ani publicznego PR #3045. Nie należy uznawać nieudanego katalogu wyjściowego za kompletny raport; kolejna próba powinna używać nowego folderu.
+
+## Potwierdzenie GUI i lokalizacja raportu
+
+Użytkownik zainstalował nakładkę rozpoznawania katalogu i utworzył raport z GUI do nowego folderu. Zrzuty potwierdziły otwarcie raportu HTML w przeglądarce, jedną pozycję PNG, zakładkę TEST_ZAPISU_2026 i zachowany komentarz „Zażółć gęślą jaźń — test zapisu”.
+
+Wskazane na zrzucie pozostałości lokalizacji poprawiono w HTMLReportTask i zasobach: jednostka rozmiaru pochodzi z HTMLReportTask.Bytes (B po polsku, Bytes w pakiecie bazowym), polskie „of” ma jawne odstępy po obu stronach, dodatkowe nazwy pól są wyświetlane przez LocalizedProperties, a wartość pola category korzysta z już zlokalizowanych kategorii raportu. Oryginalne klucze pól, wartości w indeksie, rozszerzenia plików i niepowiązane dane nie są zmieniane.
+
+Nowa generacja na kopii paczki: kod 0. W plikach HTML potwierdzono „Strona 1 z 1”, „124 475 B” (odstęp tysięcy jest nierozdzielający), „kategoria”, „Inne Obrazy”, „Rozszerzenie” i poprawny komentarz. Osobne procesy Java dla pl-PL/en potwierdziły jednostki B/Bytes i polskie odstępy. Instalator nowych etykiet sprawdzono na kopii pod PowerShell 5.1; tworzy kopie zapasowe i wymaga zgodności SHA-256. Test nowych etykiet w GUI użytkownika i nowe CI pozostają otwarte.
