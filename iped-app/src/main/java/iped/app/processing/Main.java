@@ -162,6 +162,16 @@ public class Main {
             if (rootPath.endsWith("iped" + File.separator + "lib")) { //$NON-NLS-1$ //$NON-NLS-2$
                 isReportingFromCaseDir = true;
                 rootPath = new File(url.toURI()).getParentFile().getParent();
+            } else {
+                // Portable report processes can load Main from lib/iped-search-app.jar.
+                // Configuration belongs to the distribution root, not to lib/.
+                File jarDirectory = new File(rootPath);
+                File distribution = jarDirectory.getParentFile();
+                if ("lib".equals(jarDirectory.getName()) && distribution != null //$NON-NLS-1$
+                        && new File(distribution, "iped.jar").isFile() //$NON-NLS-1$
+                        && new File(distribution, "LocalConfig.txt").isFile()) { //$NON-NLS-1$
+                    rootPath = distribution.getAbsolutePath();
+                }
             }
         }
 

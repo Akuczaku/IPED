@@ -1,0 +1,23 @@
+# Poprawka startu raportu z Windows portable
+
+Objaw z GUI: ReportDialog uruchamiał Bootstrap z lib/iped-search-app.jar i iped.ui.report. Main.setConfigPath uznawał katalog tego JAR-a (lib) za katalog konfiguracji, szukając lib/LocalConfig.txt i lib/conf/Log4j2ConfigurationConsoleOnly.xml. Raport nie powstawał.
+
+Poprawka zachowuje dotychczasową obsługę katalogu sprawy iped/lib. Dodatkowo rozpoznaje dystrybucję portable: gdy JAR pochodzi z katalogu lib, a jego katalog nadrzędny zawiera iped.jar i LocalConfig.txt, konfiguracja jest pobierana z tego katalogu nadrzędnego. Bez tych dwóch plików zachowanie pozostaje dotychczasowe. Nie kopiuje się konfiguracji do lib.
+
+Walidacja lokalna:
+- Main.java skompilowany przez JDK 11 --release 11 przeciw bibliotekom badanej paczki.
+- Rzeczywisty Main.setConfigPath przetestowany w osobnych procesach Java dla trzech układów: portable lib JAR, główny iped.jar i dotychczasowy układ sprawy iped/lib. Wszystkie PASS.
+- Próba utworzenia raportu na odizolowanej kopii aplikacji, z zapisanym wyborem fikcyjnej zakładki użytkownika: kod 0, 1 wyeksportowany plik, 2 indeksowane elementy, 0 wyjątków parsowania, 0 błędów odczytu, 0 timeoutów. Powstały katalogi raportu HTML i indeksowanej sprawy. Nie oceniono jeszcze wizualnie całego raportu.
+- W środowisku lokalnego testu zgłoszono brak narzędzi RecycleBin/Regripper; ten test ich działania nie potwierdza. Wczesna próba bez izolowanego user.home została zablokowana przy zapisie ipedRoot.txt; właściwy test użył osobnego katalogu domowego i tymczasowego wewnątrz workspace.
+- Lokalna nakładka do badanej paczki zmienia tylko iped/app/processing/Main.class w iped.jar i lib/iped-search-app.jar; wszystkie inne wpisy obu JAR-ów porównano według SHA-256 i są identyczne. Nie jest to pełne nowe wydanie Maven.
+- Instalator PS5.1: kontrola wersji SHA-256, kopie oryginałów, atomowa podmiana, próba na kopii i ponowne uruchomienie instalatora PASS.
+
+Status: poprawka źródłowa i lokalna nakładka przygotowane; test przez GUI użytkownika oraz nowe CI pozostają do wykonania. Nie zmieniono źródłowej sprawy, parsera PDF ani publicznego PR #3045. Nie należy uznawać nieudanego katalogu wyjściowego za kompletny raport; kolejna próba powinna używać nowego folderu.
+
+## Potwierdzenie GUI i lokalizacja raportu
+
+Użytkownik zainstalował nakładkę rozpoznawania katalogu i utworzył raport z GUI do nowego folderu. Zrzuty potwierdziły otwarcie raportu HTML w przeglądarce, jedną pozycję PNG, zakładkę TEST_ZAPISU_2026 i zachowany komentarz „Zażółć gęślą jaźń — test zapisu”.
+
+Wskazane na zrzucie pozostałości lokalizacji poprawiono w HTMLReportTask i zasobach: jednostka rozmiaru pochodzi z HTMLReportTask.Bytes (B po polsku, Bytes w pakiecie bazowym), polskie „of” ma jawne odstępy po obu stronach, dodatkowe nazwy pól są wyświetlane przez LocalizedProperties, a wartość pola category korzysta z już zlokalizowanych kategorii raportu. Oryginalne klucze pól, wartości w indeksie, rozszerzenia plików i niepowiązane dane nie są zmieniane.
+
+Nowa generacja na kopii paczki: kod 0. W plikach HTML potwierdzono „Strona 1 z 1”, „124 475 B” (odstęp tysięcy jest nierozdzielający), „kategoria”, „Inne Obrazy”, „Rozszerzenie” i poprawny komentarz. Osobne procesy Java dla pl-PL/en potwierdziły jednostki B/Bytes i polskie odstępy. Instalator nowych etykiet sprawdzono na kopii pod PowerShell 5.1; tworzy kopie zapasowe i wymaga zgodności SHA-256. Następnie użytkownik utworzył kolejny raport przez GUI i przekazał zrzut potwierdzający „Strona 1 z 1”, „124 475 B”, „kategoria”, „Inne Obrazy”, „Rozszerzenie”, jedną pozycję PNG i zachowany komentarz zakładki z polskimi znakami. Test GUI nowych etykiet zaliczony; nowe CI gałęzi pozostaje do sprawdzenia.
