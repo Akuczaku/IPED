@@ -1,0 +1,17 @@
+{
+  "archive": "IPED-Polish-4.3.1-PORTABLE-AI-OCR-PL-TEST2.zip",
+  "sha256": "42c724301f1b8bfe9a706fbc0bb17ea3bedc852aa95b6e9e837b45a664226955",
+  "bytes": 962594961,
+  "manifest_files": 3912,
+  "status": "TEST",
+  "tested_features": [
+    "OCR pol PSM1",
+    "image similarity",
+    "synthetic face images",
+    "static-frame synthetic video faces",
+    "single selected face"
+  ],
+  "new_launcher_gui": "pending",
+  "second_pc_ai": "pending",
+  "notes": "No private cases or user logs; synthetic fixtures included separately; remaining AI modules disabled"
+}
