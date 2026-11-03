@@ -22,3 +22,6 @@ The three scripts in windows/ are copied to the package root. They use the bundl
 
 ## Polish OCR
 See [Polish OCR audit, fixtures and package setup](../../docs/testing/FIX19.1-ocr-pl.md). Model download is pinned and checksum-verified; OCR stays disabled by default.
+
+## Export and reopen
+See [synthetic export SHA-256 and index reopen checks](../../docs/testing/FIX19.1-export-reopen-pl.md). The verifier uses hashes of the exact original fixtures, not regenerated PDFs.
