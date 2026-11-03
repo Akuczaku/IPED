@@ -1,4 +1,4 @@
-# Portable AI - potwierdzone testy 2026-11-03
+﻿# Portable AI - potwierdzone testy 2026-11-03
 
 ## Automatyczne kontrole w kopii testowej
 
@@ -34,6 +34,45 @@ GUI moze wypisac ostrzezenia WhatsApp o wlasciwosciach HashTask mimo
 wlaczonej konfiguracji przetwarzania. Nie zmieniano parsera w celu ich ukrycia.
 
 Test2 ma nowe uruchomienie jednym kliknieciem oraz zebrane dane testowe.
-Drugi komputer i ten nowy start wymagaja potwierdzenia. Sprawy prywatne,
+Stan przed dalszymi testami: drugi komputer i nowy start wymagaly potwierdzenia. Sprawy prywatne,
 logi uzytkownikow, modele i duze archiwa nie sa dodawane do Git.
 Publiczny PR #3045 pozostaje bez zmian.
+
+## Dalsze potwierdzenia uzytkownika - 2026-11-03
+
+Uzytkownik potwierdzil dzialanie TEST2 na drugim komputerze. Nie otrzymano
+niezaleznego dziennika srodowiska ani kompletnej listy wykonanych tam kontroli.
+Nie utozsamiamy tego z automatycznym audytem wszystkich funkcji.
+
+Zrzuty GUI z trudniejszych syntetycznych filmow (prog testu 50):
+- ruch kadru, zoom/obrot i fragment rozmycia: 74%;
+- cykliczne przyciemnienie/rozjasnienie: 73%;
+- czasowe zasloniecie dolnej czesci twarzy: 73%;
+- kontrola bez twarzy nie pojawila sie w wynikach.
+Ramki widoczne na czesci klatek przyciemnionych i zaslonietych.
+Sa to animacje statycznych obrazow, a nie naturalny ruch osob.
+Wynik filmu nie oznacza dopasowania kazdej klatki ani samego trudnego fragmentu.
+
+Krotkie pojawienie sie twarzy: film 30 s, fikcyjne twarze tylko w przedziale
+[14,16) s. Film znaleziony z wynikiem 69%; kontrola bez twarzy pominieta.
+Siatka pokazuje jedna pobrana klatke z twarzami. Potwierdza to trafienie
+w probkowanie tego konkretnego fragmentu, nie gwarancje znalezienia kazdego
+krotkiego wystapienia przy innych czasach i ustawieniach.
+
+Zewnetrzny wzorzec z filmu dostarczonego przez uzytkownika: PNG 374x375 px,
+bez powiekszania/wyostrzania. Detektor HOG upSampling=1 wykryl jedna twarz
+oraz wyliczyl wektor. GUI uzytkownika pokazalo wzorzec 100%, film 57%
+i ramki na czesci klatek. Wzorzec wycieto z tego samego filmu, wiec nie jest
+to niezalezny test tozsamosci na innych nagraniach. Nie potwierdzano
+prawdziwosci ani pochodzenia sceny przedstawionej w filmie.
+
+Kontrola negatywna / ograniczenie rozdzielczosci: przy innym filmie 600x316 px
+wycinki mialy ok. 41x41 px (sama twarz ok. 23x23). IPED nie wykryl twarzy
+we wzorcu zewnetrznym; opcja biezacego elementu byla nieaktywna. Minimum
+przetwarzania obrazu wynosi 48x48. Zmniejszenie progu podobienstwa nie naprawia
+braku detekcji; skalowanie nie odtwarza brakujacych szczegolow.
+
+Do repozytorium nie dolaczono zadnego filmu, wycinka, sciezek lokalnych,
+metadanych zrodlowych ani zrzutow zawierajacych material uzytkownika.
+Opis wynikow jest anonimowy. Publiczny PR #3045 i ZIP TEST2 bez zmian.
+Procenty pozostaja miara programu, nie prawdopodobienstwem tozsamosci.
