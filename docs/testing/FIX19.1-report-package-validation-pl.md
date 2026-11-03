@@ -43,6 +43,14 @@ W źródłowej fikcyjnej sprawie utworzono zakładkę TEST_ZAPISU_2026, przypisa
 
 ## Zakres i ograniczenia
 
-Zaliczony zakres: otwarcie istniejącej sprawy z nowego ZIP; utworzenie raportu HTML i indeksowanego dla jednej zakładki z jednym syntetycznym PNG; zachowanie komentarza; zgodność bajtów eksportu; uruchomienie programu raportu i podgląd PNG. Sprawa źródłowa i program pozostawały na tym samym komputerze. Nie przenoszono wygenerowanego raportu na niezależny komputer i nie sprawdzano go po odłączeniu źródeł. Nie deklarujemy na tej podstawie pełnej niezależności od instalacji ani zgodności wszystkich formatów raportów.
+Zaliczony zakres: otwarcie istniejącej sprawy z nowego ZIP; utworzenie raportu HTML i indeksowanego dla jednej zakładki z jednym syntetycznym PNG; zachowanie komentarza; zgodność bajtów eksportu; uruchomienie programu raportu i podgląd PNG. Pierwszy test wykonano na tym samym komputerze co sprawa źródłowa. Następnie użytkownik potwierdził działanie po przeniesieniu całego raportu na drugi komputer bez kopiowania sprawy źródłowej — szczegóły i granice dowodu poniżej. Nie deklarujemy zgodności wszystkich formatów raportów ani niezależności od każdego składnika systemowego.
 
 Nie przebudowano ZIP po tym potwierdzeniu. Nie zmieniono parserów, danych prywatnych ani publicznego PR #3045. Test nie potwierdza wszystkich parserów, modeli AI/GPU, dowolnej jakości OCR ani wszystkich narzędzi zewnętrznych. Historyczne ostrzeżenia numpy/JPEG2000 i narzędzi RecycleBin/Regripper nie zostały naprawione w ramach tej kontroli.
+
+## Przeniesienie raportu na drugi komputer — potwierdzenie użytkownika
+
+W kolejnym kroku poproszono użytkownika o zamknięcie IPED, skopiowanie całego katalogu wygenerowanego raportu na drugi komputer (bez sprawy źródłowej), otwarcie raport.htm i sprawdzenie zakładki, komentarza oraz odnośnika PNG, a następnie uruchomienie IPED-SearchApp.exe z tego katalogu i sprawdzenie zakładki oraz podglądu obrazu.
+
+Użytkownik odpowiedział: „wszystko dziala bez problemu”. Traktujemy to jako zgłoszone przez użytkownika zaliczenie tego scenariusza dla jednego raportu z syntetycznym PNG. Nie otrzymano nowego zrzutu, logu ani wykazu środowiska z drugiego komputera. Nie przeprowadzono oddzielnej kontroli listy zainstalowanych runtime ani faktycznej niedostępności zasobów źródłowych. W szczególności nie jest to dowód, że raport zadziała na każdym komputerze, offline w dowolnej konfiguracji lub bez wszystkich zależności systemowych.
+
+Testowana paczka programu i jej archiwum pozostały bez zmian. Ta aktualizacja dodaje wyłącznie wynik testu do dokumentacji. Publiczny PR #3045, parser PDF, oryginalne dane i indeksy pozostają bez zmian.
