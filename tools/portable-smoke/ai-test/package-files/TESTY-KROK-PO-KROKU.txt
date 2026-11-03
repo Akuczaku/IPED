@@ -1,0 +1,22 @@
+﻿TESTY PACZKI AI OCR PL
+1. Uruchom Uruchom-test.cmd. Poczekaj na przetworzenie i otwarcie sprawy.
+2. Twarze: wybierz 03-obraz-wzorcowy.png, prawy przycisk > Znajdz podobne
+   twarze > Wyrozniony element, prog 50. Oczekiwane obraz wzorcowy,
+   drugie zdjecie osob i 01-fikcyjne-twarze.mp4; bez kontrolnego filmu domu.
+   Powtorz z jedna twarza zaznaczona (1/2). Obramowania powinny dotyczyc
+   wybranej twarzy. Wyniki procentowe moga sie roznic.
+3. Podobne obrazy: Wyczysc filtr, wybierz 11-dom-baza.png, prawy przycisk
+   > Znajdz podobne obrazy > Wyrozniony element. Mniejszy dom powinien
+   byc blisko obrazu bazowego, odmienny wzor nie powinien dominowac.
+4. OCR: Wyczysc filtr, wyszukaj IPEDOCRALPHA2026. Oczekiwane OCR-PL-obraz.png
+   i OCR-PL-skan.pdf. Sprawdz zakladke Tekst.
+5. Utworz zakladke TEST_ZAPISU, przypisz obraz, dodaj komentarz
+   z polskimi znakami, zamknij i otworz ponownie te sama sprawe.
+6. Wyeksportuj PNG/PDF i sprawdz podglad. Raport tworz do NOWEGO folderu.
+7. Na drugim komputerze powtorz test bez instalowania Pythona i modeli.
+
+Wideo ma 20 sekund i sklada sie z nieruchomych, wygenerowanych obrazow.
+Test nie obejmuje ruchu, rozmycia, zaslonietych i malych twarzy ani wszystkich
+kodekow. Pozytywny wynik nie potwierdza wszystkich funkcji aplikacji.
+Nie usuwaj logow przy bledzie. Przed publicznym udostepnieniem usun z nich
+prywatne dane i sciezki. Nie publikuj materialow z prawdziwych spraw.

@@ -1,0 +1,37 @@
+﻿IPED Polska Edycja by Czaku 4.3.1 - PORTABLE AI OCR PL TEST2
+Windows x64 - paczka do testow, nie pelna walidacja wszystkich funkcji.
+
+ROZPAKOWANIE
+Rozpakuj CALY ZIP do krotkiej sciezki, np. C:\IPEDAI.
+Nie uruchamiaj z ZIP. Zachowaj caly folder IPED-PL.
+Nie przenos tylko plikow EXE/CMD.
+
+GOTOWY TEST
+Kliknij Uruchom-test.cmd. Przetworzy tylko DANE-TESTOWE\INPUT
+z tej paczki i utworzy NOWA SPRAWA-TESTOWA z data w folderze paczki.
+Po przetworzeniu otworzy wynik. Folder paczki musi byc zapisywalny.
+Szczegoly kontroli wynikow: TESTY-KROK-PO-KROKU.txt.
+
+WLASNE DANE
+Przetworz-dane.cmd: podaj plik lub folder danych i NOWY folder sprawy.
+Wynik musi byc poza folderem wejsciowym. Nie nadpisujemy istniejacej sprawy.
+Po zakonczeniu sprawdz statystyki i dziennik; kod 0 nie wyklucza ostrzezen.
+Otworz-sprawe.cmd: podaj folder sprawy zawierajacy iped\index.
+Nie podawaj folderu programu ani pliku PDF/filmu.
+
+WLACZONE I SPRAWDZONE W OGRANICZONYCH TESTACH
+Polski OCR (pol), miniatury i podobienstwo obrazow, wykrywanie
+oraz wyszukiwanie twarzy na zdjeciach i klatkach filmu (CPU/HOG).
+Biblioteki i modele sa dolaczone, bez pobierania przy uruchomieniu.
+Haszowanie: MD5, SHA-1, SHA-256; miniatury wideo wlaczone.
+Dotychczasowe poprawki PL, PDF, JEP i raportow zachowano.
+Wlacz-OCR.cmd / Wylacz-OCR.cmd zmieniaja tylko ustawienie OCR.
+Istniejace indeksy bez cech AI/OCR wymagaja nowego przetworzenia danych.
+
+Raporty: przekazuj caly folder raportu. Zapis zakladek i komentarzy
+sprawdzono, podobnie jak zgodnosc bajtow wyeksportowanego PNG/PDF.
+Nie wlaczono pozostalych, nieprzetestowanych modulow AI.
+Procent podobienstwa nie jest prawdopodobienstwem tozsamosci.
+Twarze i materialy testowe sa fikcyjne. Nie ma prywatnych spraw ani logow.
+Ograniczenia i wersje: STAN-WERSJI.txt, BUILD-INFO.json, AI-DEPENDENCIES.json.
+Manifest SHA256SUMS.txt obejmuje pliki paczki, nie jest podpisem cyfrowym.
