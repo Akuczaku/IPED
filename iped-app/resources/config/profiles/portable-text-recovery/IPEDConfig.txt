@@ -1,0 +1,2 @@
+# Targeted retry profile. Process only affected files into a NEW case.
+enableHashDBLookup = false
