@@ -41,3 +41,9 @@ JPEG2000/JPX dependency is still absent and not fixed here. Temporary file delet
 behavior is unchanged. GUI regression verification on tester hardware and full
 Maven CI are still pending. No private logs, paths, filenames or samples are
 included. Public upstream PR #3045 is unchanged.
+
+Compatibility follow-up: the installer also accepts the original Portable AI OCR PL
+TEST archive manifest (SHA256 3077ffc1aff82dacd7597bda31b058e2fb89f8573aa3c75126b13ceaf123b314).
+The original archive SHA256 and each replaced file were verified; all replaced
+originals match TEST2. No arbitrary manifest bypass was added. PowerShell 5.1
+installation and repeat on an isolated AI TEST target passed.

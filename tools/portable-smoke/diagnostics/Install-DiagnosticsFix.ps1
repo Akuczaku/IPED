@@ -7,7 +7,7 @@ if(Test-Path -LiteralPath (Join-Path $root 'iped.jar')){
  if((Split-Path -Leaf $root) -ne 'iped-4.3.1'){throw 'Wskaz folder paczki zawierajacy iped-4.3.1.'}
  $root=Split-Path -Parent $root
 }
-if(!(Test-Path -LiteralPath (Join-Path $root 'iped-4.3.1\iped.jar'))){throw 'Nie znaleziono programu. Podaj folder paczki TEST2.'}
+if(!(Test-Path -LiteralPath (Join-Path $root 'iped-4.3.1\iped.jar'))){throw 'Nie znaleziono programu. Podaj folder paczki AI TEST lub TEST2.'}
 $manifest=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'patch-manifest.json') -Raw -Encoding UTF8|ConvertFrom-Json
 $info=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'patch-info.json') -Raw -Encoding UTF8|ConvertFrom-Json
 $pending=@()
@@ -29,7 +29,8 @@ foreach($entry in $manifest){
 }
 if($pending.Count -eq 0){Write-Host 'Poprawka jest juz zainstalowana.';exit 0}
 $hashList=Join-Path $root 'SHA256SUMS.txt'
-if((Get-FileHash -LiteralPath $hashList -Algorithm SHA256).Hash.ToLower() -ne $info.original_manifest_sha256){throw 'Inny manifest paczki. Instalacja przerwana przed zmianami.'}
+$supportedManifests=@($info.original_manifest_sha256)+@($info.compatible_manifest_sha256)
+if($supportedManifests -notcontains (Get-FileHash -LiteralPath $hashList -Algorithm SHA256).Hash.ToLower()){throw 'Inny manifest paczki. Instalacja przerwana przed zmianami.'}
 $backup=Join-Path $root ('PATCH-BACKUPS\diagnostics-'+(Get-Date -Format 'yyyyMMdd-HHmmss')+'-'+[guid]::NewGuid().ToString('N').Substring(0,6))
 New-Item -ItemType Directory -Path $backup -Force|Out-Null
 Copy-Item -LiteralPath $hashList -Destination (Join-Path $backup 'SHA256SUMS.txt')
