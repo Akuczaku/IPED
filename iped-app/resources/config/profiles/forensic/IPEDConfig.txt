@@ -2,7 +2,8 @@
 # Processing Settings
 ########################################################################
 
-enableHashDBLookup = true
+# Configure hashesDB in LocalConfig.txt before enabling this optional lookup.
+enableHashDBLookup = false
 enableQRCode = true
 enableCarving = true
 enableImageSimilarity = true
