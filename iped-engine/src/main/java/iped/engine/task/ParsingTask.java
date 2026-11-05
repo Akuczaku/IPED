@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.extractor.EmbeddedDocumentExtractor;
 import org.apache.tika.io.TemporaryResources;
@@ -668,7 +669,13 @@ public class ParsingTask extends ThumbTask implements EmbeddedDocumentExtractor 
             // set the subItem openContainer with the object passed in the inputStrem of the call parseEmbedded()
             // it will be used in the parser of the the subitem
             if (inputStream instanceof TikaInputStream) {
-                subItem.setOpenContainer(TikaInputStream.cast(inputStream).getOpenContainer());
+                Object openContainer = TikaInputStream.cast(inputStream).getOpenContainer();
+                // POIFS containers belong to the extraction stream. That stream can be
+                // closed before this queued subitem is parsed; reopen Office data from
+                // the extracted bytes instead of reusing its file channel.
+                if (!(openContainer instanceof POIFSFileSystem)) {
+                    subItem.setOpenContainer(openContainer);
+                }
             }
 
             if ("".equals(metadata.get(BasicProps.LENGTH))) {
