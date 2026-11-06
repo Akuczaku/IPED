@@ -1,0 +1,237 @@
+--- a/ChmAssert.java
++++ b/ChmAssert.java
+@@ -50,12 +50,12 @@
+             throw new TikaException("resetTable is null");
+         }
+ 
+-        if (resetTable.getBlockAddress().length <= 1) {
++        if (resetTable.getBlockAddress() == null || resetTable.getBlockAddress().length == 0) {
+             throw new TikaException(
+                     "resetTable.getBlockAddress().length should be greater than zero");
+         }
+ 
+-        if (blockNumber < 0) {
++        if (blockNumber < 0 || blockNumber >= resetTable.getBlockAddress().length) {
+             throw new TikaException("blockNumber should be positive number");
+         }
+ 
+--- a/ChmExtractor.java
++++ b/ChmExtractor.java
+@@ -59,10 +59,10 @@
+             /* Creates and parses chm itsf header */
+             setChmItsfHeader(new ChmItsfHeader());
+             // getChmItsfHeader().parse(Arrays.copyOfRange(getData(), 0,
+-            // ChmConstants.CHM_ITSF_V3_LEN - 1), getChmItsfHeader());
++            // ChmConstants.CHM_ITSF_V3_LEN), getChmItsfHeader());
+             getChmItsfHeader()
+                     .parse(ChmCommons.copyOfRange(getData(), 0,
+-                            ChmConstants.CHM_ITSF_V3_LEN - 1),
++                            ChmConstants.CHM_ITSF_V3_LEN),
+                             getChmItsfHeader());
+ 
+             /* Creates and parses chm itsp header */
+@@ -306,7 +306,7 @@
+                                         (int) getLzxBlockOffset(), (int) getLzxBlockLength());
+ 
+                         lzxBlock = new ChmLzxBlock(start, dataSegment,
+-                                getChmLzxcResetTable().getBlockLen(), null);
++                                getChmLzxcResetTable().getBlockLen(), null, (int) getChmLzxcControlData().getWindowSize());
+ 
+                         getLzxBlocksCache().add(lzxBlock);
+                     } else {
+@@ -339,12 +339,12 @@
+                             lzxBlock = new ChmLzxBlock(i, ChmCommons
+                                     .getChmBlockSegment(getData(), getChmLzxcResetTable(), i,
+                                             (int) getLzxBlockOffset(), (int) getLzxBlockLength()),
+-                                    getChmLzxcResetTable().getBlockLen(), null);
++                                    getChmLzxcResetTable().getBlockLen(), null, (int) getChmLzxcControlData().getWindowSize());
+                         } else {
+                             lzxBlock = new ChmLzxBlock(i, ChmCommons
+                                     .getChmBlockSegment(getData(), getChmLzxcResetTable(), i,
+                                             (int) getLzxBlockOffset(), (int) getLzxBlockLength()),
+-                                    getChmLzxcResetTable().getBlockLen(), lzxBlock);
++                                    getChmLzxcResetTable().getBlockLen(), lzxBlock, (int) getChmLzxcControlData().getWindowSize());
+                         }
+ 
+                         getLzxBlocksCache().add(lzxBlock);
+--- a/ChmItsfHeader.java
++++ b/ChmItsfHeader.java
+@@ -487,9 +487,9 @@
+          * compute it
+          */
+         if (chmItsfHeader.getVersion() == ChmConstants.CHM_VER_3) {
+-            if (chmItsfHeader.getDataRemained() >= 0) {
+-                chmItsfHeader
+-                        .setDataOffset(chmItsfHeader.getDirOffset() + chmItsfHeader.getDirLen());
++            if (chmItsfHeader.getDataRemained() >= 8) {
++                chmItsfHeader.setDataOffset(
++                        chmItsfHeader.unmarshalUint64(data, chmItsfHeader.getDataOffset()));
+             } else {
+                 throw new TikaException("cannot set data offset, no data remained");
+             }
+--- a/ChmLzxBlock.java
++++ b/ChmLzxBlock.java
+@@ -44,16 +44,24 @@
+ 
+     // trying to find solution for bad blocks ...
+     private int previousBlockType = -1;
++    private int windowSize;
++    private byte[] history;
+ 
+     public ChmLzxBlock(int blockNumber, byte[] dataSegment, long blockLength, ChmLzxBlock prevBlock)
+             throws TikaException {
++        this(blockNumber, dataSegment, blockLength, prevBlock, 65536);
++    }
++
++    public ChmLzxBlock(int blockNumber, byte[] dataSegment, long blockLength,
++            ChmLzxBlock prevBlock, int windowSize) throws TikaException {
++        this.windowSize = windowSize;
+         try {
+             if (validateConstructorParams(blockNumber, dataSegment, blockLength)) {
+                 setBlockNumber(blockNumber);
+ 
+                 if (prevBlock != null && prevBlock.getState().getBlockLength() >
+                         prevBlock.getState().getBlockRemaining()) {
+-                    setChmSection(new ChmSection(dataSegment, prevBlock.getContent()));
++                    setChmSection(new ChmSection(dataSegment, prevBlock.history));
+                 } else {
+                     setChmSection(new ChmSection(dataSegment));
+                 }
+@@ -75,6 +83,14 @@
+                 }
+ 
+                 extractContent();
++                byte[] prior = prevBlock == null ? new byte[0] : prevBlock.history;
++                int keep = Math.min(windowSize, prior.length + content.length);
++                history = new byte[keep];
++                int start = prior.length + content.length - keep;
++                for (int h=0; h<keep; h++) {
++                    int at=start+h;
++                    history[h]=at<prior.length ? prior[at] : content[at-prior.length];
++                }
+             } else {
+                 throw new TikaException("Check your chm lzx block parameters");
+             }
+@@ -417,27 +433,15 @@
+                     break;
+                 }
+ 
+-                if (runsrc < 0) {
+-                    if (matchlen + runsrc <= 0) {
+-                        runsrc = prevcontent.length + runsrc;
+-                        while (matchlen-- > 0) content[rundest++] = prevcontent[runsrc++];
++                while (matchlen-- > 0) {
++                    if (runsrc < 0) {
++                        int at = prevcontent.length + runsrc;
++                        if (at < 0 || at >= prevcontent.length) throw new ChmParsingException("Invalid LZX history offset");
++                        content[rundest++] = prevcontent[at];
+                     } else {
+-                        runsrc = prevcontent.length + runsrc;
+-                        while (runsrc < prevcontent.length)
+-                            content[rundest++] = prevcontent[runsrc++];
+-                        matchlen = matchlen + runsrc - prevcontent.length;
+-                        runsrc = 0;
+-                        while (matchlen-- > 0) content[rundest++] = content[runsrc++];
+-                    }
+-
+-                } else {
+-                    /* copies any wrappes around source data */
+-                    while ((runsrc < 0) && (matchlen-- > 0)) {
+-                        content[rundest++] = content[(int) (runsrc + getBlockLength())];
+-                        runsrc++;
+-                    }
+-                    /* copies match data - no worries about destination wraps */
+-                    while (matchlen-- > 0) content[rundest++] = content[runsrc++];
++                        content[rundest++] = content[runsrc];
++                    }
++                    runsrc++;
+                 }
+             }
+         }
+@@ -459,14 +463,14 @@
+             int f = getChmSection().peekBits(ChmConstants.LZX_MAINTREE_TABLEBITS);
+             assertShortArrayNotNull(getState().getMainTreeTable());
+             s = getState().getMainTreeTable()[f];
+-            if (s >= ChmConstants.LZX_MAIN_MAXSYMBOLS) {
++            if (s >= getState().getMainTreeElements()) {
+                 x = ChmConstants.LZX_MAINTREE_TABLEBITS;
+                 do {
+                     x++;
+                     s <<= 1;
+                     s += getChmSection().checkBit(x);
+                 } while ((s = getState().getMainTreeTable()[s]) >=
+-                        ChmConstants.LZX_MAIN_MAXSYMBOLS);
++                        getState().getMainTreeElements());
+             }
+             getChmSection().getSyncBits(getState().getMainTreeLengtsTable()[s]);
+             if (s < ChmConstants.LZX_NUM_CHARS) {
+@@ -521,36 +525,15 @@
+                 if (i > len) {
+                     break;
+                 }
+-                if (runsrc < 0) {
+-                    if (matchlen + runsrc <= 0) {
+-                        runsrc = prevcontent.length + runsrc;
+-                        while ((matchlen-- > 0) && (prevcontent != null) && ((runsrc + 1) > 0))
+-                            if ((rundest < content.length) && (runsrc < content.length)) {
+-                                content[rundest++] = prevcontent[runsrc++];
+-                            }
++                while (matchlen-- > 0) {
++                    if (runsrc < 0) {
++                        int at = prevcontent.length + runsrc;
++                        if (at < 0 || at >= prevcontent.length) throw new ChmParsingException("Invalid LZX history offset");
++                        content[rundest++] = prevcontent[at];
+                     } else {
+-                        runsrc = prevcontent.length + runsrc;
+-                        while (runsrc < prevcontent.length)
+-                            if ((rundest < content.length) && (runsrc < content.length)) {
+-                                content[rundest++] = prevcontent[runsrc++];
+-                            }
+-                        matchlen = matchlen + runsrc - prevcontent.length;
+-                        runsrc = 0;
+-                        while (matchlen-- > 0) content[rundest++] = content[runsrc++];
+-                    }
+-
+-                } else {
+-                    /* copies any wrapped source data */
+-                    while ((runsrc < 0) && (matchlen-- > 0)) {
+-                        content[rundest++] = content[(int) (runsrc + getBlockLength())];
+-                        runsrc++;
+-                    }
+-                    /* copies match data - no worries about destination wraps */
+-                    while (matchlen-- > 0) {
+-                        if ((rundest < content.length) && (runsrc < content.length)) {
+-                            content[rundest++] = content[runsrc++];
+-                        }
+-                    }
++                        content[rundest++] = content[runsrc];
++                    }
++                    runsrc++;
+                 }
+             }
+         }
+@@ -855,7 +838,7 @@
+ 
+     private void checkLzxBlock(ChmLzxBlock chmPrevLzxBlock) throws TikaException {
+         if (chmPrevLzxBlock == null && getBlockLength() < Integer.MAX_VALUE) {
+-            setState(new ChmLzxState((int) getBlockLength()));
++            setState(new ChmLzxState(windowSize));
+         } else
+         //use clone to avoid changing a cached or to be cached block
+         {
+@@ -908,3 +891,4 @@
+         this.state = state;
+     }
+ }
++
+--- a/ChmLzxState.java
++++ b/ChmLzxState.java
+@@ -69,7 +69,7 @@
+             setR0(1);
+             setR1(1);
+             setR2(1);
+-            setMainTreeElements(512);
++            setMainTreeElements(ChmConstants.LZX_NUM_CHARS + position_slots * 8);
+             setHadStarted(LzxState.NOT_STARTED_DECODING);
+             setFramesRead(0);
+             setBlockRemaining(0);
