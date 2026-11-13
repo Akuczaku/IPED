@@ -1,6 +1,5 @@
 package iped.engine.task;
 import java.io.*;
-import java.nio.file.*;
 import java.util.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -9,14 +8,17 @@ import org.apache.tika.mime.MediaType;
 import org.apache.commons.compress.archivers.*;
 public class VisualStudioIpiTest {
  static final MediaType ARJ=MediaType.application("x-arj");
- @Test public void realStreamsAreCorrectedWithoutConsumingBytes()throws Exception {
-  int n=0;for(Path p:Files.newDirectoryStream(Paths.get(System.getProperty("ipi.dir")))){
-   byte[] b=Files.readAllBytes(p);assertEquals("arj",ArchiveStreamFactory.detect(new BufferedInputStream(new ByteArrayInputStream(b))));
+ // Synthetic option streams: no external files or machine-specific properties.
+ @Test public void optionStreamsAreCorrectedWithoutConsumingBytes()throws Exception {
+  int n=0;for(int variant=0;variant<5;variant++){
+   byte[] b=new byte[5120];new Random(variant).nextBytes(b);
+   byte[] header={(byte)0x60,(byte)0xea,0,0,1,0,0,0};
+   System.arraycopy(header,0,b,0,header.length);assertEquals("arj",ArchiveStreamFactory.detect(new BufferedInputStream(new ByteArrayInputStream(b))));
    try(TikaInputStream s=TikaInputStream.get(b)){
     assertEquals(MediaType.OCTET_STREAM,SignatureTask.refineVisualStudioIpiType(s,ARJ));
     assertEquals(0x60,s.read());
    }n++;
-  }assertEquals(Integer.getInteger("expected.streams",5).intValue(),n);
+  }assertEquals(5,n);
  }
  @Test public void contextIsRequired(){
   assertTrue(SignatureTask.isVisualStudioIpiCandidate(ARJ,"IPI_test","a.opt>>IPI_test",true,5120L));
@@ -26,7 +28,10 @@ public class VisualStudioIpiTest {
   assertFalse(SignatureTask.isVisualStudioIpiCandidate(ARJ,"IPI_test","a.opt>>IPI_test",true,100L));
  }
  @Test public void genuineArjRemainsArj()throws Exception {
-  byte[] b=Files.readAllBytes(Paths.get(System.getProperty("arj.file")));
+  byte[] b;
+  try(InputStream in=VisualStudioIpiTest.class.getResourceAsStream("/test-files/ipi/control.arj")) {
+   assertNotNull("Bundled ARJ control fixture",in);b=in.readAllBytes();
+  }
   try(TikaInputStream s=TikaInputStream.get(b)){assertEquals(ARJ,SignatureTask.refineVisualStudioIpiType(s,ARJ));}
   try(ArchiveInputStream a=new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new ByteArrayInputStream(b)))){assertNotNull(a.getNextEntry());}
  }
