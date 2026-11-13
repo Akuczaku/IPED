@@ -61,6 +61,20 @@ public class GetResultsJSWorker extends iped.viewers.api.CancelableWorker<KMLRes
         msource = (IPEDMultiSource) this.app.getIPEDSource();
     }
 
+    private String photoDescription(IItemId id) {
+        String description = Messages.getString("KMLResult.SearchResultsDescription");
+        byte[] thumb;
+        try {
+            thumb = msource.getAtomicSourceBySourceId(id.getSourceId()).getItemByID(id.getId()).getThumb();
+        } catch (RuntimeException ex) {
+            return description; // A missing thumbnail must not hide the GPS marker.
+        }
+        if (thumb != null && thumb.length > 0 && thumb.length <= 2000000) {
+            description += "<br><img alt=\"\" style=\"max-width:240px;max-height:180px\" src=\"data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(thumb) + "\">";
+        }
+        return description;
+    }
+
     @Override
     public void done() {
         if (consumer != null) {
@@ -419,7 +433,7 @@ public class GetResultsJSWorker extends iped.viewers.api.CancelableWorker<KMLRes
                                 if (finalGids.length() > 1) {
                                     finalGids.append(",");
                                 }
-                                finalGids.append("['" + gid + "'," + finalRow + ",'" + StringEscapeUtils.escapeJavaScript(htmlFormat(doc.get(BasicProps.NAME))) + "','" + Messages.getString("KMLResult.SearchResultsDescription") + "'," + lat
+                                finalGids.append("['" + gid + "'," + finalRow + ",'" + StringEscapeUtils.escapeJavaScript(htmlFormat(doc.get(BasicProps.NAME))) + "','" + StringEscapeUtils.escapeJavaScript(photoDescription(item)) + "'," + lat
                                         + "," + longit + "," + checked + "," + selected + "]");
 
                                 updateViewableRegion(longit, lat);
@@ -445,7 +459,7 @@ public class GetResultsJSWorker extends iped.viewers.api.CancelableWorker<KMLRes
                                     if (finalGids.length() > 1) {
                                         finalGids.append(",");
                                     }
-                                    finalGids.append("['" + gid + "'," + finalRow + ",'" + StringEscapeUtils.escapeJavaScript(htmlFormat(doc.get(BasicProps.NAME))) + "','" + Messages.getString("KMLResult.SearchResultsDescription") + "',"
+                                    finalGids.append("['" + gid + "'," + finalRow + ",'" + StringEscapeUtils.escapeJavaScript(htmlFormat(doc.get(BasicProps.NAME))) + "','" + StringEscapeUtils.escapeJavaScript(photoDescription(item)) + "',"
                                             + lat + "," + longit + "," + checked + "," + selected + "]");
 
                                     updateViewableRegion(longit, lat);

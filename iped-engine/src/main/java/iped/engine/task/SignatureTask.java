@@ -73,6 +73,7 @@ public class SignatureTask extends AbstractTask {
                         setInputStreamFactory(tis, evidence);
 
                         type = getDetector().detect(tis, metadata).getBaseType();
+                        type = refineSpeexType(getDetector(), tis, type);
 
                     } catch (IOException e) {
                         LOGGER.warn("{} Error detecting signature: {} ({} bytes)\t\t{}", //$NON-NLS-1$
@@ -124,7 +125,56 @@ public class SignatureTask extends AbstractTask {
                         evidence.getPath(), evidence.getLength(), e.toString());
             }
         }
+        if (isVisualStudioIpiCandidate(type, evidence.getName(), evidence.getPath(),
+                evidence.isSubItem(), evidence.getLength())) {
+            try (TikaInputStream stream = evidence.getTikaStream()) {
+                type = refineVisualStudioIpiType(stream, type);
+            } catch (IOException e) {
+                LOGGER.warn("Error inspecting Visual C++ option stream: {}", evidence.getPath(), e);
+            }
+        }
         evidence.setMediaType(MediaTypes.getMediaTypeRegistry().normalize(type));
+    }
+
+    static MediaType refineSpeexType(Detector detector, TikaInputStream stream,
+            MediaType type) throws IOException {
+        if (!MediaType.audio("speex").equals(type)) {
+            return type;
+        }
+        byte[] header = new byte[4];
+        if (stream.peek(header) == 4 && header[0] == 'O' && header[1] == 'g'
+                && header[2] == 'g' && header[3] == 'S') {
+            return type;
+        }
+        // SPX is also used for non-audio files. Without an Ogg header, do not
+        // let the filename alone select the Speex parser.
+        Metadata contentMetadata = new Metadata();
+        return detector.detect(stream, contentMetadata).getBaseType();
+    }
+
+    static boolean isVisualStudioIpiCandidate(MediaType type, String name, String path,
+            boolean subitem, Long length) {
+        if (!MediaType.application("x-arj").equals(type) || !subitem
+                || length == null || length != 5120 || name == null
+                || !name.startsWith("IPI_") || path == null) {
+            return false;
+        }
+        int separator = path.lastIndexOf(">>");
+        return separator >= 0 && path.substring(0, separator)
+                .toLowerCase(java.util.Locale.ROOT).endsWith(".opt");
+    }
+
+    static MediaType refineVisualStudioIpiType(TikaInputStream stream, MediaType type)
+            throws IOException {
+        // Visual C++ option streams share ARJ's two-byte magic, followed by
+        // a zero header length and a little-endian version marker of one.
+        // Restrict this correction to the caller's OLE option-stream context.
+        byte[] header = new byte[8];
+        byte[] expected = {(byte) 0x60, (byte) 0xea, 0, 0, 1, 0, 0, 0};
+        if (stream.peek(header) == header.length && Arrays.equals(header, expected)) {
+            return MediaType.OCTET_STREAM;
+        }
+        return type;
     }
 
     private void setInputStreamFactory(TikaInputStream tis, IItem item) {

@@ -159,25 +159,32 @@
         <parser class="org.gagravarr.tika.SpeexParser"></parser>
         <parser class="org.gagravarr.tika.TheoraParser"></parser>
 
-        <parser class="iped.parsers.ocr.OCRParser"></parser>
+        <parser class="iped.parsers.ocr.LargeJpegOCRParser"></parser>
 
         <parser class="iped.parsers.misc.MultipleParser">
             <mime>image/jpeg</mime>
             <params>
                 <param name="parserName" type="string">JPEGParser</param>
-                <param name="parsers" type="string">iped.parsers.ocr.OCRParser;org.apache.tika.parser.image.JpegParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;org.apache.tika.parser.image.JpegParser</param>
             </params>
         </parser>
 
         <parser class="iped.parsers.misc.MultipleParser">
             <mime>image/bmp</mime>
-            <mime>image/gif</mime>
             <mime>image/png</mime>
             <mime>image/vnd.wap.wbmp</mime>
             <mime>image/x-jbig2</mime>
             <params>
                 <param name="parserName" type="string">ImageParser</param>
-                <param name="parsers" type="string">iped.parsers.ocr.OCRParser;org.apache.tika.parser.image.ImageParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;org.apache.tika.parser.image.ImageParser</param>
+            </params>
+        </parser>
+
+        <parser class="iped.parsers.misc.MultipleParser">
+            <mime>image/gif</mime>
+            <params>
+                <param name="parserName" type="string">ImageParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;iped.parsers.image.KnownMalformedGifParser</param>
             </params>
         </parser>
 
@@ -185,7 +192,7 @@
             <mime>image/webp</mime>
             <params>
                 <param name="parserName" type="string">WebpParser</param>
-                <param name="parsers" type="string">iped.parsers.ocr.OCRParser;org.apache.tika.parser.image.WebPParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;org.apache.tika.parser.image.WebPParser</param>
             </params>
         </parser>
 
@@ -193,7 +200,7 @@
             <mime>image/vnd.adobe.photoshop</mime>
             <params>
                 <param name="parserName" type="string">PSDParser</param>
-                <param name="parsers" type="string">iped.parsers.ocr.OCRParser;org.apache.tika.parser.image.PSDParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;org.apache.tika.parser.image.PSDParser</param>
             </params>
         </parser>
 
@@ -201,7 +208,7 @@
             <mime>image/tiff</mime>
             <params>
                 <param name="parserName" type="string">TiffParser</param>
-                <param name="parsers" type="string">iped.parsers.ocr.OCRParser;org.apache.tika.parser.image.TiffParser;iped.parsers.image.TiffPageParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;org.apache.tika.parser.image.TiffParser;iped.parsers.image.TiffPageParser</param>
             </params>
         </parser>
 
@@ -212,7 +219,7 @@
             <mime>image/heif-sequence</mime>
             <params>
                 <param name="parserName" type="string">HeicParser</param>
-                <param name="parsers" type="string">iped.parsers.ocr.OCRParser;org.apache.tika.parser.image.HeifParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;org.apache.tika.parser.image.HeifParser</param>
             </params>
         </parser>
 
@@ -220,7 +227,7 @@
             <mime>image/emf</mime>
             <params>
                 <param name="parserName" type="string">EMFParser</param>
-                <param name="parsers" type="string">iped.parsers.ocr.OCRParser;org.apache.tika.parser.microsoft.EMFParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;org.apache.tika.parser.microsoft.EMFParser</param>
             </params>
         </parser>
 
@@ -228,7 +235,7 @@
             <mime>image/wmf</mime>
             <params>
                 <param name="parserName" type="string">WMFParser</param>
-                <param name="parsers" type="string">iped.parsers.ocr.OCRParser;org.apache.tika.parser.microsoft.WMFParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;org.apache.tika.parser.microsoft.WMFParser</param>
             </params>
         </parser>
 
@@ -236,7 +243,7 @@
             <mime>image/svg+xml</mime>
             <params>
                 <param name="parserName" type="string">SVGXMLParser</param>
-                <param name="parsers" type="string">iped.parsers.ocr.OCRParser;iped.parsers.misc.XMLParser</param>
+                <param name="parsers" type="string">iped.parsers.ocr.LargeJpegOCRParser;iped.parsers.misc.XMLParser</param>
             </params>
         </parser>
 

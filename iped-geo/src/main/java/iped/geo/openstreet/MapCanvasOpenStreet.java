@@ -65,6 +65,7 @@ public class MapCanvasOpenStreet extends AbstractMapCanvas {
         Platform.runLater(new Runnable() {
             public void run() {
                 browser = new WebView();
+                MapImageContextMenu.install(browser);
                 jfxPanel.setScene(new Scene(browser));
 
                 browser.setOnMouseReleased(e -> {
@@ -127,6 +128,7 @@ public class MapCanvasOpenStreet extends AbstractMapCanvas {
     public void connect() {
         if (webEngine == null) {
             browser = new WebView();
+                MapImageContextMenu.install(browser);
             jfxPanel.setScene(new Scene(browser));
             webEngine = browser.getEngine();
         }
@@ -579,6 +581,9 @@ public class MapCanvasOpenStreet extends AbstractMapCanvas {
                         webEngine.executeScript("track.clearVisibleMarkers();");
                     }
                     webEngine.executeScript("track.tourOrder='"+self.tourOrder+"';");                    
+                    if (gids.isEmpty()) {
+                        webEngine.executeScript("doFullyLoaded();");
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -599,6 +604,8 @@ public class MapCanvasOpenStreet extends AbstractMapCanvas {
                             webEngine.executeScript("track.createMarkers(" + jsgids + ");");
                         }
                         webEngine.executeScript("track.orderVisibleMarkers();");
+                    } else {
+                        webEngine.executeScript("doFullyLoaded();");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
