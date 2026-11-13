@@ -305,6 +305,13 @@ public class ResultTableModel extends AbstractTableModel implements SearchResult
                 }
             }
 
+            if (IndexItem.DELETED.equals(field) || IndexItem.CARVED.equals(field)) {
+                for (int i = 0; i < values.length; i++) {
+                    if ("true".equals(values[i])) values[i] = Messages.getString("ResultTableModel.True");
+                    else if ("false".equals(values[i])) values[i] = Messages.getString("ResultTableModel.False");
+                }
+            }
+
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < values.length; i++) {
                 if (isNumeric) {

@@ -16,3 +16,6 @@ Known local environment restriction: bundled RegRipper/rifiuti tools fail Window
 Local corrections include optional JPEG OCR resampling, narrow known-GIF recovery, SPX/IPI detection, TIFF supplied-stream parsing, map image menu/thumbnails, and localized processing-window title. The TIFF real-world cause remains unconfirmed upstream; the test establishes supplied-stream behavior only.
 
 Before distribution beyond experimental testers: second-PC regression, image/video AI, Telegram attachment coverage, reports, GPS map UI and index compatibility. Existing TEST7 and cases were not modified.
+
+
+2026-11-13 follow-up: startup title bundle key fixed; Polish timeline, boolean display, filter brackets and CSAM filter labels; Polish short help restored. Viewer-only WhatsApp dependency diagnostics verified separately from processing (explicit false still reports both dependencies). User confirmed text/OCR searches and viewer without errors. Packaging excludes generated cases.

@@ -182,7 +182,7 @@ public class WhatsAppParser extends SQLite3DBParser {
 
     @Override
     public Set<MediaType> getSupportedTypes(ParseContext arg0) {
-        if (!hashDependenciesChecked.getAndSet(true)) {
+        if (!Boolean.getBoolean("iped.viewerOnly") && !hashDependenciesChecked.getAndSet(true)) {
             if (!Boolean.valueOf(System.getProperty(HASH_TASK_ENABLED_SYSPROP, "false"))) {
                 logger.error("HashTask is disabled. WhatsAppParser needs it to link attachments to chats!");
             }

@@ -613,7 +613,7 @@ public class IpedChartsPanel extends JPanel implements ResultSetViewer, TableMod
 
     @Override
     public String getTitle() {
-        return "Timeline";
+        return iped.app.ui.Messages.getString("App.TimelineTitle");
     }
 
     @Override
