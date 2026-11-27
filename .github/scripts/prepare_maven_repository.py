@@ -8,6 +8,8 @@ from pathlib import Path
 import subprocess
 import xml.etree.ElementTree as ET
 import zipfile
+import time
+import urllib.request
 
 REVISION = "b94637ac0077d6d7f1ff2e3f10c909c8d0af04a2"
 REMOTE = "https://gitlab.com/iped-project/iped-maven.git"
@@ -58,6 +60,39 @@ def settings(repo, output):
     ET.ElementTree(root).write(output, encoding="utf-8", xml_declaration=True)
 
 
+# New TSK artifacts are published in the official Maven registry, but are not
+# present in the pinned Git mirror. Keep their contents pinned independently.
+REGISTRY = "https://gitlab.com/api/v4/projects/16064308/packages/maven/"
+SUPPLEMENTAL = {'org/sleuthkit/sleuthkit/4.15.0.p3/sleuthkit-4.15.0.p3.jar': '4a2b0012951aacd7c4394054ff4ab9526e029c9ab22af82ec4749044c4586434', 'org/sleuthkit/sleuthkit/4.15.0.p3/sleuthkit-4.15.0.p3.pom': 'a9849f6515f1d4a8a5b7249418d4911c40e937485288a9b0753ad75ec22fb07f', 'org/sleuthkit/sleuthkit-dlls/4.15.0-p3/sleuthkit-dlls-4.15.0-p3.pom': 'db69d48a766c843b108bd7e531500ed877b74ff76b7132aea9fb5d83e1262e8b', 'org/sleuthkit/sleuthkit-dlls/4.15.0-p3/sleuthkit-dlls-4.15.0-p3.zip': 'b2f9dca67cc8941041a7cb87a5d402863493e63500fed2eb37b05d836eaf13bd'}
+
+def add_supplemental_artifacts(repo):
+    for relative, expected in SUPPLEMENTAL.items():
+        target = repo / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        for attempt in range(3):
+            try:
+                with urllib.request.urlopen(REGISTRY + relative, timeout=60) as response:
+                    data = response.read(20 * 1024 * 1024 + 1)
+                if hashlib.sha256(data).hexdigest() != expected:
+                    raise RuntimeError("Unexpected artifact checksum: " + relative)
+                target.write_bytes(data)
+                print("Verified official registry artifact: " + relative)
+                break
+            except (OSError, TimeoutError):
+                if attempt == 2:
+                    raise
+                time.sleep(2 ** attempt)
+        if target.suffix == ".pom":
+            ET.parse(target)
+        else:
+            with zipfile.ZipFile(target) as archive:
+                if archive.testzip() is not None:
+                    raise RuntimeError("Corrupt supplemental artifact: " + relative)
+        for algorithm in ("sha1", "md5"):
+            target.with_suffix(target.suffix + "." + algorithm).write_text(
+                hashlib.new(algorithm, data).hexdigest(), encoding="ascii")
+
+
 def main():
     temp = Path(os.environ["RUNNER_TEMP"])
     repo = temp / ("iped-maven-" + REVISION)
@@ -75,6 +110,7 @@ def main():
         raise RuntimeError("Unexpected dependency repository revision")
     run("git", "lfs", "fetch", "origin", REVISION, cwd=repo)
     run("git", "lfs", "checkout", cwd=repo)
+    add_supplemental_artifacts(repo)
     verify(repo)
     settings(repo, temp / "iped-maven-settings.xml")
     print("Job-local Maven mirror prepared; Central and JitPack remain unchanged.")
