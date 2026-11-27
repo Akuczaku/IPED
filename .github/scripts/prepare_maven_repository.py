@@ -60,10 +60,17 @@ def settings(repo, output):
     ET.ElementTree(root).write(output, encoding="utf-8", xml_declaration=True)
 
 
-# New TSK artifacts are published in the official Maven registry, but are not
+# New TSK, Python and MPlayer artifacts are published in the official Maven registry, but are not
 # present in the pinned Git mirror. Keep their contents pinned independently.
 REGISTRY = "https://gitlab.com/api/v4/projects/16064308/packages/maven/"
-SUPPLEMENTAL = {'org/sleuthkit/sleuthkit/4.15.0.p3/sleuthkit-4.15.0.p3.jar': '4a2b0012951aacd7c4394054ff4ab9526e029c9ab22af82ec4749044c4586434', 'org/sleuthkit/sleuthkit/4.15.0.p3/sleuthkit-4.15.0.p3.pom': 'a9849f6515f1d4a8a5b7249418d4911c40e937485288a9b0753ad75ec22fb07f', 'org/sleuthkit/sleuthkit-dlls/4.15.0-p3/sleuthkit-dlls-4.15.0-p3.pom': 'db69d48a766c843b108bd7e531500ed877b74ff76b7132aea9fb5d83e1262e8b', 'org/sleuthkit/sleuthkit-dlls/4.15.0-p3/sleuthkit-dlls-4.15.0-p3.zip': 'b2f9dca67cc8941041a7cb87a5d402863493e63500fed2eb37b05d836eaf13bd'}
+SUPPLEMENTAL = {'mplayer/mplayer-zip/1.5-r38677/mplayer-zip-1.5-r38677.pom': '0e13bd8493db3040f0eb0d6b2b60f9de9e1a84942ea29b10de38f719d784d966',
+ 'mplayer/mplayer-zip/1.5-r38677/mplayer-zip-1.5-r38677.zip': 'b83536f15525deb960562386e42dd534784a1fa2215cdc55f29781ee2c126f3b',
+ 'org/python/python-jep-dlib/3.9.13-4.0.3-20.0.1-1/python-jep-dlib-3.9.13-4.0.3-20.0.1-1.pom': '3bb8874bd881a933201734d638c5fd2281faa0b3f6dab622f672fb955ad440d1',
+ 'org/python/python-jep-dlib/3.9.13-4.0.3-20.0.1-1/python-jep-dlib-3.9.13-4.0.3-20.0.1-1.zip': 'c840c8dec020e70b059e12696fc4dad955d03422559a8ea03df1255081adeed8',
+ 'org/sleuthkit/sleuthkit-dlls/4.15.0-p3/sleuthkit-dlls-4.15.0-p3.pom': 'db69d48a766c843b108bd7e531500ed877b74ff76b7132aea9fb5d83e1262e8b',
+ 'org/sleuthkit/sleuthkit-dlls/4.15.0-p3/sleuthkit-dlls-4.15.0-p3.zip': 'b2f9dca67cc8941041a7cb87a5d402863493e63500fed2eb37b05d836eaf13bd',
+ 'org/sleuthkit/sleuthkit/4.15.0.p3/sleuthkit-4.15.0.p3.jar': '4a2b0012951aacd7c4394054ff4ab9526e029c9ab22af82ec4749044c4586434',
+ 'org/sleuthkit/sleuthkit/4.15.0.p3/sleuthkit-4.15.0.p3.pom': 'a9849f6515f1d4a8a5b7249418d4911c40e937485288a9b0753ad75ec22fb07f'}
 
 def add_supplemental_artifacts(repo):
     for relative, expected in SUPPLEMENTAL.items():
