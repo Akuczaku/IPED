@@ -1,5 +1,5 @@
 ﻿########################################################################
-# Processing Settings
+# IPED - Processing Settings
 ########################################################################
 
 # Configure hashesDB in LocalConfig.txt before enabling this optional lookup.
